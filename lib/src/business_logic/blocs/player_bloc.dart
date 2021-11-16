@@ -13,7 +13,9 @@ part 'player_state.dart';
 
 class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
 
-  PlayerBloc() : super(PlayerState.initialState()) {
+  AudioPlayer audioPlayer;
+  
+  PlayerBloc(this.audioPlayer) : super(PlayerState.initialState()) {
     on<PlayerSetSongEvent>(_onPlayerSetSong);
     on<PlayerStartedEvent>(_onPlayerStarted);
     on<PlayerStoppedEvent>(_onPlayerStopped);
@@ -38,7 +40,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   Future<void> _onPlayerStarted(
       PlayerStartedEvent event, Emitter<PlayerState> emit) async {
     if (state.song != null) {
-      await state.audioPlayer.play(state.song!.storageUrl);
+      await audioPlayer.play(state.song!.storageUrl);
 
       emit(state.copyWith(
         status: PlayerStatus.playing,
@@ -48,7 +50,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
 
   Future<void> _onPlayerStopped(
       PlayerStoppedEvent event, Emitter<PlayerState> emit) async {
-    await state.audioPlayer.pause();
+    await audioPlayer.pause();
 
     emit(state.copyWith(
       status: PlayerStatus.stopped,
@@ -57,7 +59,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
 
   void _onPlayerForward(PlayerForwardEvent event, Emitter<PlayerState> emit) {
     if (state.song != null) {
-      state.audioPlayer.play(state.song!.storageUrl);
+      audioPlayer.play(state.song!.storageUrl);
 
       emit(state.copyWith(
         status: PlayerStatus.playing,
@@ -67,7 +69,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
 
   void _onPlayerBackward(PlayerBackwardEvent event, Emitter<PlayerState> emit) {
     if (state.song != null) {
-      state.audioPlayer.play(state.song!.storageUrl);
+      audioPlayer.play(state.song!.storageUrl);
 
       emit(state.copyWith(
         status: PlayerStatus.playing,

@@ -6,7 +6,6 @@ enum PlayerStatus { stopped, playing, paused }
 
 class PlayerState extends Equatable {
   const PlayerState({
-    required this.audioPlayer,
     this.status = PlayerStatus.stopped,
     this.repeat = PlayerRepeat.off,
     this.shuffle = PlayerShuffle.off,
@@ -16,8 +15,6 @@ class PlayerState extends Equatable {
     this.duration,
     this.position,
   });
-
-  final AudioPlayer audioPlayer;
 
   final PlayerStatus status;
   final PlayerRepeat repeat;
@@ -32,7 +29,6 @@ class PlayerState extends Equatable {
   final Duration? duration;
 
   PlayerState copyWith({
-    AudioPlayer? audioPlayer,
     PlayerStatus? status,
     PlayerRepeat? repeat,
     PlayerShuffle? shuffle,
@@ -43,7 +39,6 @@ class PlayerState extends Equatable {
     Duration? position,
   }) {
     return PlayerState(
-      audioPlayer: audioPlayer ?? this.audioPlayer,
       status: status ?? this.status,
       repeat: repeat ?? this.repeat,
       shuffle: shuffle ?? this.shuffle,
@@ -57,7 +52,6 @@ class PlayerState extends Equatable {
 
   static initialState() {
     return PlayerState(
-        audioPlayer: AudioPlayer(),
         status: PlayerStatus.stopped,
         repeat: PlayerRepeat.off,
         shuffle: PlayerShuffle.off,

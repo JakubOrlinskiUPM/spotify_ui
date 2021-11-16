@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:spotify_ui/src/views/ui/home/home.dart';
 import 'package:spotify_ui/src/views/ui/library/library.dart';
@@ -51,14 +50,15 @@ class _AppState extends State<App> {
             onTap: (val) => _onTap(val, context),
             items: tabs
                 .map(
-                  (tab) => BottomNavigationBarItem(
+                  (tab) =>
+                  BottomNavigationBarItem(
                     icon: Padding(
                       padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
                       child: Icon(tab.pageIcon),
                     ),
                     label: tab.pageName,
                   ),
-                )
+            )
                 .toList()),
       ),
     );
