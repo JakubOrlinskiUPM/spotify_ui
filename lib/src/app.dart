@@ -1,14 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:spotify_ui/src/views/ui/home/home.dart';
-import 'package:spotify_ui/src/views/ui/home/home_page.dart';
-import 'package:spotify_ui/src/views/ui/library/library.dart';
-import 'package:spotify_ui/src/views/ui/library/library_page.dart';
-import 'package:spotify_ui/src/views/ui/page_details.dart';
-import 'package:spotify_ui/src/views/ui/search/search.dart';
-import 'package:spotify_ui/src/views/ui/search/search_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'views/ui/playback/playback_bottom_sheet.dart';
+import 'package:spotify_ui/src/views/ui/home/home.dart';
+import 'package:spotify_ui/src/views/ui/library/library.dart';
+import 'package:spotify_ui/src/views/ui/page_details.dart';
+import 'package:spotify_ui/src/views/ui/playback/playback_bottom_sheet.dart';
+import 'package:spotify_ui/src/views/ui/search/search.dart';
 
 class App extends StatefulWidget {
   const App({Key? key}) : super(key: key);
