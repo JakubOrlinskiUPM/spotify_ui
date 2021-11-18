@@ -13,7 +13,10 @@ class PlaybackSliderProvider with ChangeNotifier {
   String get durationString => '''${_duration.inMinutes}:${_duration.inSeconds.remainder(60).toString().padLeft(2, "0")}''';
   String get positionString => '''${_position.inMinutes}:${_position.inSeconds.remainder(60).toString().padLeft(2, "0")}''';
 
-  void setSliderValue(double value) {
+  Future<void> setSliderValue(double value, bool seek) async {
+    if (seek) {
+      await audioPlayer.seek(_duration * value);
+    }
     _sliderValue = value;
     notifyListeners();
   }
@@ -29,7 +32,7 @@ class PlaybackSliderProvider with ChangeNotifier {
         ? position.inMilliseconds / duration.inMilliseconds
         : 0;
     _position = position;
-    setSliderValue(sliderValue);
+    setSliderValue(sliderValue, false);
   }
 
   PlaybackSliderProvider(this.audioPlayer) {

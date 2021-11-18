@@ -3,8 +3,9 @@ import 'package:marquee/marquee.dart';
 import 'package:spotify_ui/src/views/ui/utils.dart';
 
 class PlaybackMarquee extends StatelessWidget {
-  const PlaybackMarquee({Key? key, required this.text}) : super(key: key);
-  final String text;
+  const PlaybackMarquee({Key? key, required this.title, required this.authors}) : super(key: key);
+  final String title;
+  final String authors;
 
   static TextStyle songTextStyle = TextStyle(color: Colors.white, fontSize: 28);
   static TextStyle authorTextStyle =
@@ -15,7 +16,7 @@ class PlaybackMarquee extends StatelessWidget {
     return Expanded(
       flex: 8,
       child: LayoutBuilder(builder: (context, box) {
-        Size s = getTextSize(text, songTextStyle);
+        Size s = getTextSize(title, songTextStyle);
         if (s.width > box.biggest.width) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -24,7 +25,7 @@ class PlaybackMarquee extends StatelessWidget {
                 height: s.height,
                 child: Marquee(
                   style: songTextStyle,
-                  text: text,
+                  text: title,
                   velocity: 40.0,
                   blankSpace: 25,
                   startAfter: const Duration(seconds: 2),
@@ -33,7 +34,7 @@ class PlaybackMarquee extends StatelessWidget {
                   fadingEdgeStartFraction: 0.1,
                 ),
               ),
-              Text("author", style: authorTextStyle),
+              Text(authors, style: authorTextStyle),
             ],
           );
         } else {
@@ -41,10 +42,10 @@ class PlaybackMarquee extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                text,
+                title,
                 style: songTextStyle,
               ),
-              Text("author", style: authorTextStyle),
+              Text(authors, style: authorTextStyle),
             ],
           );
         }

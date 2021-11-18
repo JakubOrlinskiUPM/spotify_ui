@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:spotify_ui/src/business_logic/blocs/player_bloc.dart';
 import 'package:spotify_ui/src/business_logic/providers/playback_slider_provider.dart';
 
-
 class PlaybackSlider extends StatefulWidget {
   const PlaybackSlider({Key? key, required this.state}) : super(key: key);
 
@@ -18,6 +17,26 @@ class _PlaybackSliderState extends State<PlaybackSlider> {
   static const double THUMB_SIZE_SMALL = 5;
   static const double THUMB_SIZE_BIG = 8;
   double _sliderThumbSize = THUMB_SIZE_SMALL;
+  double _sliderValue = 0.0;
+  bool _isUserSelected = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      PlaybackSliderProvider psp = Provider.of<PlaybackSliderProvider>(context, listen: false);
+      psp.addListener(() {
+        if (mounted) {
+          setState(() {
+            if (!_isUserSelected) {
+              _sliderValue = psp.sliderValue;
+            }
+          });
+        }
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,20 +52,24 @@ class _PlaybackSliderState extends State<PlaybackSlider> {
               thumbColor: Colors.white,
               trackShape: CustomTrackShape(),
               trackHeight: 2,
-              thumbShape: RoundSliderThumbShape(enabledThumbRadius: _sliderThumbSize),
+              thumbShape:
+                  RoundSliderThumbShape(enabledThumbRadius: _sliderThumbSize),
             ),
             child: Slider(
-              value: context.watch<PlaybackSliderProvider>().sliderValue,
+              value: _sliderValue,
               onChanged: (double pos) => _onPositionChanged(pos, context),
               onChangeStart: (double pos) {
                 setState(() {
                   _sliderThumbSize = THUMB_SIZE_BIG;
+                  _isUserSelected = true;
                 });
               },
               onChangeEnd: (double pos) {
                 setState(() {
                   _sliderThumbSize = THUMB_SIZE_SMALL;
+                  _isUserSelected = false;
                 });
+                _onPositionChangeEnd(pos, context);
               },
             ),
           ),
@@ -63,8 +86,14 @@ class _PlaybackSliderState extends State<PlaybackSlider> {
     );
   }
 
+  void _onPositionChangeEnd(double value, BuildContext context) {
+    context.read<PlaybackSliderProvider>().setSliderValue(value, true);
+  }
+
   void _onPositionChanged(double value, BuildContext context) {
-    context.read<PlaybackSliderProvider>().setSliderValue(value);
+    setState(() {
+      _sliderValue = value;
+    });
   }
 }
 
