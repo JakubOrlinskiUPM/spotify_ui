@@ -10,7 +10,8 @@ import 'package:spotify_ui/src/business_logic/blocs/player_bloc.dart';
 import 'package:spotify_ui/src/business_logic/models/album.dart';
 import 'package:spotify_ui/src/business_logic/models/playlist.dart';
 import 'package:spotify_ui/src/business_logic/models/song.dart';
-import 'package:spotify_ui/src/business_logic/providers/playback_slider_provider.dart';
+import 'package:spotify_ui/src/views/ui/playback/playback_marquee.dart';
+import 'package:spotify_ui/src/views/ui/playback/playback_slider.dart';
 
 class PlaybackSheet extends StatefulWidget {
   const PlaybackSheet({Key? key}) : super(key: key);
@@ -20,6 +21,8 @@ class PlaybackSheet extends StatefulWidget {
 }
 
 class _PlaybackSheetState extends State<PlaybackSheet> {
+  static const double ICON_SIZE = 50;
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<PlayerBloc, PlayerState>(builder: (context, state) {
@@ -71,37 +74,32 @@ class _PlaybackSheetState extends State<PlaybackSheet> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
-                        children: const [Text("title"), Text("author")],
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          PlaybackMarquee(text: "text"),
+                          Text("author"),
+                        ],
                       ),
                       const Icon(CupertinoIcons.heart),
                     ],
                   ),
-                  Slider(
-                    value: context.watch<PlaybackSliderProvider>().sliderValue,
-                    onChanged: _onChanged,
-                  ),
+                  PlaybackSlider(state: state),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      _buildShuffle(state),
                       IconButton(
-                        icon: Icon(Icons.shuffle),
-                        onPressed: _onShufflePressed,
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.home),
+                        iconSize: ICON_SIZE,
+                        icon: const Icon(Icons.skip_previous),
                         onPressed: _onBackPressed,
                       ),
+                      _buildPlay(state),
                       IconButton(
-                        icon: Icon(Icons.pause),
-                        onPressed: () => _onPlayPressed(context, state),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.forward),
+                        iconSize: ICON_SIZE,
+                        icon: const Icon(Icons.skip_next),
                         onPressed: _onForwardPressed,
                       ),
-                      IconButton(
-                        icon: Icon(Icons.repeat),
-                        onPressed: _onRepeatPressed,
-                      ),
+                      _buildRepeat(state),
                     ],
                   ),
                 ],
@@ -113,7 +111,76 @@ class _PlaybackSheetState extends State<PlaybackSheet> {
     });
   }
 
-  void _onChanged(double value) {}
+  Widget _buildPlay(PlayerState state) {
+    if (state.status == PlayerStatus.playing) {
+      return IconButton(
+        iconSize: 1.5 * ICON_SIZE,
+        icon: const Icon(Icons.pause_circle_filled_outlined),
+        onPressed: () => _onPlayPressed(context, state),
+      );
+    } else {
+      return IconButton(
+        iconSize: 1.5 * ICON_SIZE,
+        icon: const Icon(Icons.play_circle_fill_outlined),
+        onPressed: () => _onPlayPressed(context, state),
+      );
+    }
+  }
+
+  Widget _buildShuffle(PlayerState state) {
+    IconData id;
+    Color c;
+
+    switch (state.shuffle) {
+      case PlayerShuffle.off:
+        id = Icons.shuffle;
+        c = Colors.white;
+        break;
+      case PlayerShuffle.on:
+        id = Icons.shuffle;
+        c = Colors.green;
+        break;
+      default:
+        id = Icons.shuffle;
+        c = Colors.white;
+    }
+
+    return IconButton(
+      color: c,
+      iconSize: 0.6 * ICON_SIZE,
+      icon: Icon(id),
+      onPressed: _onShufflePressed,
+    );
+  }
+
+  Widget _buildRepeat(PlayerState state) {
+    Color c;
+    IconData id;
+    switch (state.repeat) {
+      case PlayerRepeat.off:
+        c = Colors.white;
+        id = Icons.repeat;
+        break;
+      case PlayerRepeat.playlist:
+        c = Colors.green;
+        id = Icons.repeat;
+        break;
+      case PlayerRepeat.song:
+        c = Colors.green;
+        id = Icons.repeat;
+        break;
+      default:
+        c = Colors.white;
+        id = Icons.repeat;
+    }
+
+    return IconButton(
+      color: c,
+      iconSize: 0.6 * ICON_SIZE,
+      icon: Icon(id),
+      onPressed: _onShufflePressed,
+    );
+  }
 
   void _onShufflePressed() {}
 
