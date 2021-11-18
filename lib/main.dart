@@ -9,6 +9,8 @@ import 'package:spotify_ui/src/business_logic/blocs/player_bloc.dart';
 import 'package:spotify_ui/src/business_logic/providers/playback_slider_provider.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
   Bloc.observer = SimpleBlocObserver();
   AudioPlayer audioPlayer = AudioPlayer();
   runApp(
