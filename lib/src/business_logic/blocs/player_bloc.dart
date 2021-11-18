@@ -3,12 +3,13 @@ import 'dart:collection';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spotify_ui/src/business_logic/models/album.dart';
+import 'package:spotify_ui/src/business_logic/models/author.dart';
 import 'package:spotify_ui/src/business_logic/models/playlist.dart';
 import 'package:spotify_ui/src/business_logic/models/song.dart';
 import 'package:audioplayers/audioplayers.dart';
 
 part 'player_event.dart';
-
 part 'player_state.dart';
 
 class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
@@ -22,13 +23,17 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     on<PlayerForwardEvent>(_onPlayerForward);
     on<PlayerBackwardEvent>(_onPlayerBackward);
     on<PlayerPositionEvent>(_onPlayerPosition);
+
+    audioPlayer.setUrl(state.song?.storageUrl ?? "");
   }
 
   void _onPlayerSetSong(PlayerSetSongEvent event, Emitter<PlayerState> emit) {
     emit(state.copyWith(
       song: event.song,
       playlist: event.playlist,
+      songIndex: state.songIndex + 1,
     ));
+    audioPlayer.play(event.song.storageUrl);
   }
 
   void _onPlayerPosition(PlayerPositionEvent event, Emitter<PlayerState> emit) {
@@ -40,8 +45,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   Future<void> _onPlayerStarted(
       PlayerStartedEvent event, Emitter<PlayerState> emit) async {
     if (state.song != null) {
-      await audioPlayer.play(state.song!.storageUrl);
-
+      audioPlayer.resume();
       emit(state.copyWith(
         status: PlayerStatus.playing,
       ));

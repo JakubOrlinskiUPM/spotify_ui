@@ -12,6 +12,9 @@ Playlist _$PlaylistFromJson(Map<String, dynamic> json) => Playlist(
       authors: (json['authors'] as List<dynamic>)
           .map((e) => Author.fromJson(e as Map<String, dynamic>))
           .toList(),
+      songs: (json['songs'] as List<dynamic>)
+          .map((e) => Song.fromJson(e as Map<String, dynamic>))
+          .toList(),
       coverUrl: json['coverUrl'] as String,
     );
 
@@ -20,4 +23,5 @@ Map<String, dynamic> _$PlaylistToJson(Playlist instance) => <String, dynamic>{
       'title': instance.title,
       'coverUrl': instance.coverUrl,
       'authors': instance.authors,
+      'songs': instance.songs,
     };
