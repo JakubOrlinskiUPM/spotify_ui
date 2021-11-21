@@ -17,6 +17,7 @@ class Song extends Equatable {
   final Album album;
   final String storageUrl;
 
+  String get authorString => authors.map((a) => a.name).join(", ");
 
   @override
   List<Object?> get props => [id];

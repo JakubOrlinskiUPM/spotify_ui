@@ -16,6 +16,7 @@ class Playlist extends Equatable {
   final List<Author> authors;
   final List<Song> songs;
 
+  String get authorString => authors.map((a) => a.name).join(", ");
 
   @override
   List<Object?> get props => [id];
