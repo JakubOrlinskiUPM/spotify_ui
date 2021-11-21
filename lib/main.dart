@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 import 'package:spotify_ui/src/app.dart';
+import 'package:spotify_ui/src/business_logic/blocs/data_bloc.dart';
 import 'package:spotify_ui/src/business_logic/blocs/player_bloc.dart';
 import 'package:spotify_ui/src/business_logic/providers/playback_slider_provider.dart';
 
@@ -18,6 +19,11 @@ void main() {
       providers: [
         BlocProvider<PlayerBloc>(
           create: (context) => PlayerBloc(audioPlayer),
+        ),
+        BlocProvider<DataBloc>(
+          create: (context) => DataBloc()
+            ..add(DataFetchRecentlyPlayed())
+            ..add(DataFetch()),
         )
       ],
       child: MultiProvider(
