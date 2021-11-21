@@ -24,6 +24,16 @@ class _AppState extends State<App> {
   ];
 
   final ThemeData themeDataDark = ThemeData(
+    fontFamily: "Outfit",
+    textTheme: TextTheme(
+      caption: TextStyle(
+        color: Colors.grey.shade400,
+      ),
+      bodyText2: const TextStyle(
+        color: Colors.white,
+        fontWeight: FontWeight.w600,
+      ),
+    ),
     colorScheme: const ColorScheme.dark(
       primary: Color(0xffbb86fc),
       primaryVariant: Color(0xff3700B3),
@@ -31,6 +41,15 @@ class _AppState extends State<App> {
       secondaryVariant: Color(0xff929292),
       surface: Color(0xff343434),
       background: Colors.black,
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: ButtonStyle(
+        alignment: Alignment.centerLeft,
+        shadowColor: MaterialStateProperty.all<Color>(Colors.transparent),
+        overlayColor: MaterialStateProperty.all<Color>(Colors.grey.shade800),
+        backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
+        foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+      ),
     ),
   );
 
@@ -50,15 +69,14 @@ class _AppState extends State<App> {
             onTap: (val) => _onTap(val, context),
             items: tabs
                 .map(
-                  (tab) =>
-                  BottomNavigationBarItem(
+                  (tab) => BottomNavigationBarItem(
                     icon: Padding(
                       padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
                       child: Icon(tab.pageIcon),
                     ),
                     label: tab.pageName,
                   ),
-            )
+                )
                 .toList()),
       ),
     );
