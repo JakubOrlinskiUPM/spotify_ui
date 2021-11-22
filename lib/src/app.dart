@@ -34,6 +34,8 @@ class _AppState extends State<App> {
         fontWeight: FontWeight.w600,
       ),
     ),
+    scaffoldBackgroundColor: Colors.black,
+    canvasColor: Colors.black,
     colorScheme: const ColorScheme.dark(
       primary: Color(0xffbb86fc),
       primaryVariant: Color(0xff3700B3),
@@ -60,24 +62,42 @@ class _AppState extends State<App> {
       darkTheme: themeDataDark,
       themeMode: ThemeMode.dark,
       home: Scaffold(
-        body: SafeArea(child: tabs[_currentIndex].navigator),
+        body: FractionallySizedBox(
+          alignment: Alignment.topCenter,
+          heightFactor: 1.15,
+          child: SafeArea(
+            bottom: false,
+            child: tabs[_currentIndex].navigator,
+          ),
+        ),
         bottomSheet: const PlaybackBottomSheet(),
-        bottomNavigationBar: BottomNavigationBar(
-            iconSize: 30,
-            backgroundColor: Colors.black26,
-            currentIndex: _currentIndex,
-            onTap: (val) => _onTap(val, context),
-            items: tabs
-                .map(
-                  (tab) => BottomNavigationBarItem(
-                    icon: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
-                      child: Icon(tab.pageIcon),
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.black.withAlpha(150), Colors.black],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: [0.0, 0.7],
+              tileMode: TileMode.clamp,
+            ),
+          ),
+          child: BottomNavigationBar(
+              iconSize: 30,
+              backgroundColor: Colors.transparent,
+              currentIndex: _currentIndex,
+              onTap: (val) => _onTap(val, context),
+              items: tabs
+                  .map(
+                    (tab) => BottomNavigationBarItem(
+                      icon: Padding(
+                        padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
+                        child: Icon(tab.pageIcon),
+                      ),
+                      label: tab.pageName,
                     ),
-                    label: tab.pageName,
-                  ),
-                )
-                .toList()),
+                  )
+                  .toList()),
+        ),
       ),
     );
   }
