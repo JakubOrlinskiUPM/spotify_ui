@@ -23,8 +23,6 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     on<PlayerForwardEvent>(_onPlayerForward);
     on<PlayerBackwardEvent>(_onPlayerBackward);
     on<PlayerPositionEvent>(_onPlayerPosition);
-
-    audioPlayer.setUrl(state.song?.storageUrl ?? "");
   }
 
   void _onPlayerSetSong(PlayerSetSongEvent event, Emitter<PlayerState> emit) {

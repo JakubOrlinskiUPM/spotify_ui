@@ -54,7 +54,7 @@ const Playlist p = Playlist(
         'https://images-na.ssl-images-amazon.com/images/I/71fij9klnNL._SY355_.jpg',
     id: 1,
     authors: [Author(name: 'Engelwood', imageUrl: '', id: 3)],
-    songs: [s1, s2, s3, s1, s2, s3]);
+    songs: [s1, s2, s3, s1, s2, s3, s2, s3, s1, s2, s3]);
 
 class DataBloc extends Bloc<DataEvent, DataState> {
   DataBloc() : super(DataState.initialState()) {
