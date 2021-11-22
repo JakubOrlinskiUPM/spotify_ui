@@ -1,28 +1,62 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:spotify_ui/src/views/ui/playback/playback_sheet.dart';
+import 'package:spotify_ui/src/business_logic/blocs/player_bloc.dart';
 
 class PlaybackBottomSheet extends StatelessWidget {
   const PlaybackBottomSheet({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Flex(
-      direction: Axis.horizontal,
-      children: [
-        Expanded(
-            child: GestureDetector(
-          onTap: () => _onTap(context),
-          child: Container(
-              height: 55,
-              decoration: const BoxDecoration(
-                  color: Colors.black26,
-                  border: Border(bottom: BorderSide(color: Colors.black))),
-              child: const Padding(
-                padding: EdgeInsets.symmetric(vertical: 4.0),
-                child: Text("PlaybackBottomSheet"),
-              )),
-        )),
-      ],
+    return BlocBuilder<PlayerBloc, PlayerState>(
+      builder: (context, state) {
+        if (state.playlist == null || state.song == null) {
+          return Container(height: 0);
+        }
+
+        return Row(
+          children: [
+            Expanded(
+              child: FractionallySizedBox(
+                widthFactor: 0.97,
+                child: GestureDetector(
+                  onTap: () => _onTap(context),
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      color: Color(0xff4c2d6c),
+                    ),
+                    child: Stack(
+                      alignment: AlignmentDirectional.bottomStart,
+                      children: [
+                        ListTile(
+                          leading: CachedNetworkImage(
+                              imageUrl: state.song!.album.coverUrl),
+                          title: Text(state.song!.title),
+                          subtitle: Text(state.song!.authorString),
+                          trailing: Text("hi"),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: FractionallySizedBox(
+                            widthFactor: 0.2,
+                            child: Container(
+                              height: 2.5,
+                              decoration: BoxDecoration(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -32,13 +66,5 @@ class PlaybackBottomSheet extends StatelessWidget {
           return const PlaybackSheet();
         },
         fullscreenDialog: true));
-    // showModalBottomSheet<void>(
-    //   useRootNavigator: true,
-    //   isScrollControlled: true,
-    //   context: context,
-    //   builder: (BuildContext context) {
-    //     return PlaybackSheet();
-    //   },
-    // );
   }
 }
