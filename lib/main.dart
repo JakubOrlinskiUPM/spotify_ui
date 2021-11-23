@@ -32,7 +32,42 @@ void main() {
             create: (context) => PlaybackSliderProvider(audioPlayer),
           ),
         ],
-        child: const App(),
+        child: MaterialApp(
+          title: 'Spotify',
+          darkTheme: ThemeData(
+            fontFamily: "Outfit",
+            textTheme: TextTheme(
+              caption: TextStyle(
+                color: Colors.grey.shade400,
+              ),
+              bodyText2: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            scaffoldBackgroundColor: Colors.black,
+            canvasColor: Colors.black,
+            colorScheme: const ColorScheme.dark(
+              primary: Color(0xffbb86fc),
+              primaryVariant: Color(0xff3700B3),
+              secondary: Color(0xfff5f5f5),
+              secondaryVariant: Color(0xff929292),
+              surface: Color(0xff343434),
+              background: Colors.black,
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: ButtonStyle(
+                alignment: Alignment.centerLeft,
+                shadowColor: MaterialStateProperty.all<Color>(Colors.transparent),
+                overlayColor: MaterialStateProperty.all<Color>(Colors.grey.shade800),
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+              ),
+            ),
+          ),
+          themeMode: ThemeMode.dark,
+          home: App(),
+        )
       ),
     ),
   );

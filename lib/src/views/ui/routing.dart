@@ -11,7 +11,6 @@ MaterialPageRoute? checkGeneralRoutes(route) {
         settings: route,
         builder: (context) {
           final args = ModalRoute.of(context)?.settings.arguments;
-          print(args);
           return PlaylistView(
             playlist: args != null ? (args as Map)['playlist'] : null,
           );
