@@ -10,12 +10,12 @@ import 'package:spotify_ui/src/business_logic/models/song.dart';
 import 'package:audioplayers/audioplayers.dart';
 
 part 'player_event.dart';
+
 part 'player_state.dart';
 
 class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
-
   AudioPlayer audioPlayer;
-  
+
   PlayerBloc(this.audioPlayer) : super(PlayerState.initialState()) {
     on<PlayerSetSongEvent>(_onPlayerSetSong);
     on<PlayerStartedEvent>(_onPlayerStarted);
@@ -23,13 +23,20 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     on<PlayerForwardEvent>(_onPlayerForward);
     on<PlayerBackwardEvent>(_onPlayerBackward);
     on<PlayerPositionEvent>(_onPlayerPosition);
+
+    audioPlayer.onPlayerCompletion.listen((event) {
+      Song? s = state.playlist?.songs[state.songIndex + 1];
+      if (s != null) {
+        add(PlayerSetSongEvent(song: s));
+      }
+    });
   }
 
   void _onPlayerSetSong(PlayerSetSongEvent event, Emitter<PlayerState> emit) {
     emit(state.copyWith(
       song: event.song,
       playlist: event.playlist,
-      songIndex: state.songIndex + 1,
+      songIndex: state.playlist?.songs.indexOf(event.song) ?? 0,
     ));
     audioPlayer.play(event.song.storageUrl);
   }
@@ -78,7 +85,6 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
       ));
     }
   }
-
 
   void _listenToPlayerState(event) {
     print("_listenToPlayerState $event");
