@@ -19,14 +19,17 @@ class Home extends PageDetails {
           return r;
         }
 
-        switch(route.name) {
+        switch (route.name) {
           default:
             return MaterialPageRoute(
               settings: route,
               builder: (context) => const HomePage(),
             );
         }
-      }
+      },
+      observers: [
+        HeroController(),
+      ],
     );
   }
 }

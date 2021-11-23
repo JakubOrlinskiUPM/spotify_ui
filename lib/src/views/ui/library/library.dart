@@ -16,6 +16,9 @@ class Library extends PageDetails {
         settings: route,
         builder: (context) => const LibraryPage(),
       ),
+      observers: [
+        HeroController(),
+      ],
     );
   }
 }

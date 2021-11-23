@@ -17,13 +17,16 @@ class SidescrollingListItem extends StatelessWidget {
       style: TextButton.styleFrom(
         padding: EdgeInsets.zero,
       ),
-      onPressed: () => _onButtonPressed(context, PLAYLIST_VIEW_ROUTE, "playlist"),
+      onPressed: () =>
+          _onButtonPressed(context, PLAYLIST_VIEW_ROUTE, "playlist"),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            child: CachedNetworkImage(imageUrl: item.coverUrl),
+            child: Hero(
+                tag: item.id.toString() + "-hero",
+                child: CachedNetworkImage(imageUrl: item.coverUrl)),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 6, bottom: 3),
@@ -37,7 +40,6 @@ class SidescrollingListItem extends StatelessWidget {
   }
 
   void _onButtonPressed(BuildContext context, String route, String itemName) {
-    print("Pushing to " + route);
     Navigator.pushNamed(context, route, arguments: {itemName: item});
   }
 }

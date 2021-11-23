@@ -16,6 +16,9 @@ class Search extends PageDetails {
         settings: route,
         builder: (context) => const SearchPage(),
       ),
+      observers: [
+        HeroController(),
+      ],
     );
   }
 }

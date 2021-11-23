@@ -48,8 +48,12 @@ class _PlaylistViewState extends State<PlaylistView> {
               background: FractionallySizedBox(
                 alignment: Alignment.topCenter,
                 heightFactor: 1 - frac,
-                child: CachedNetworkImage(
-                    fit: BoxFit.fitHeight, imageUrl: widget.playlist!.coverUrl),
+                child: Hero(
+                  tag: (widget.playlist?.id.toString() ?? "") + "-hero",
+                  child: CachedNetworkImage(
+                      fit: BoxFit.fitHeight,
+                      imageUrl: widget.playlist!.coverUrl),
+                ),
               ),
             );
           }),
