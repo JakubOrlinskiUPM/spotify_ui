@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -61,7 +62,23 @@ class _PlaybackSheetState extends State<PlaybackSheet> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
-                  child: PlaybackCarousel(state: state),
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: PlaybackCarousel(
+                      state: state,
+                      childCallback: (int itemIndex) => Padding(
+                        padding:
+                            const EdgeInsets.all(PlaybackSheet.EDGE_PADDING),
+                        child: CachedNetworkImage(
+                          fit: BoxFit.fill,
+                          repeat: ImageRepeat.noRepeat,
+                          imageUrl:
+                              state.playlist?.songs[itemIndex].album.coverUrl ??
+                                  "",
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(PlaybackSheet.EDGE_PADDING),
@@ -74,7 +91,10 @@ class _PlaybackSheetState extends State<PlaybackSheet> {
                           children: [
                             PlaybackMarquee(
                               title: state.song?.title ?? "",
-                              authors: state.song?.authors.map((a) => a.name).join(", ") ?? "",
+                              authors: state.song?.authors
+                                      .map((a) => a.name)
+                                      .join(", ") ??
+                                  "",
                             ),
                             Container(
                               width: 50,
