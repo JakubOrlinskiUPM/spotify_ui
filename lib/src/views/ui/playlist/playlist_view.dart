@@ -49,7 +49,7 @@ class _PlaylistViewState extends State<PlaylistView> {
                 alignment: Alignment.topCenter,
                 heightFactor: 1 - frac,
                 child: Hero(
-                  tag: (widget.playlist?.id.toString() ?? "") + "-hero",
+                  tag: widget.playlist!.heroString,
                   child: CachedNetworkImage(
                       fit: BoxFit.fitHeight,
                       imageUrl: widget.playlist!.coverUrl),
@@ -86,12 +86,16 @@ class _PlaylistViewState extends State<PlaylistView> {
         SliverList(
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
-              return SongItem(
-                song: widget.playlist!.songs[index],
-                playlist: widget.playlist!,
-              );
+              if (widget.playlist!.songs != null) {
+                return SongItem(
+                  song: widget.playlist!.songs![index],
+                  playlist: widget.playlist!,
+                );
+              } else {
+                return Container();
+              }
             },
-            childCount: widget.playlist!.songs.length,
+            childCount: widget.playlist!.songs?.length,
           ),
         ),
       ],
