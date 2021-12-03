@@ -57,11 +57,17 @@ class SongItem extends StatelessWidget {
 
   _onMenuPressed(BuildContext context) {
     showModalBottomSheet<void>(
+      backgroundColor: Colors.black,
       useRootNavigator: true,
       isScrollControlled: true,
+      isDismissible: true,
       context: context,
-      builder: (BuildContext context) {
-        return MenuDialog();
+      builder: (BuildContext ctx) {
+        return MenuDialog(
+          playlist: playlist,
+          song: song,
+          navigator: Navigator.of(context),
+        );
       },
     );
   }
