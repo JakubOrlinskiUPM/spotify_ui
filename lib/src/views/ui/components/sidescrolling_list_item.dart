@@ -25,14 +25,14 @@ class SidescrollingListItem extends StatelessWidget {
         children: [
           Expanded(
             child: Hero(
-                tag: item.id.toString() + "-hero",
+                tag: item.heroString,
                 child: CachedNetworkImage(imageUrl: item.coverUrl)),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 6, bottom: 3),
             child: Text(item.title),
           ),
-          Text(item.authors.map((a) => a.name).join(", "),
+          Text(item.authorString,
               style: Theme.of(context).textTheme.caption),
         ],
       ),
