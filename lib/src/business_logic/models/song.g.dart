@@ -12,7 +12,7 @@ Song _$SongFromJson(Map<String, dynamic> json) => Song(
       authors: (json['authors'] as List<dynamic>)
           .map((e) => Author.fromJson(e as Map<String, dynamic>))
           .toList(),
-      album: Album.fromJson(json['album'] as Map<String, dynamic>),
+      album: Playlist.fromJson(json['album'] as Map<String, dynamic>),
       storageUrl: json['storageUrl'] as String,
     );
 

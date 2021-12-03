@@ -1,13 +1,13 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:spotify_ui/src/business_logic/models/album.dart';
 import 'package:spotify_ui/src/business_logic/models/author.dart';
 import 'package:spotify_ui/src/business_logic/models/playlist.dart';
 import 'package:spotify_ui/src/business_logic/models/song.dart';
+import 'package:spotify_ui/src/business_logic/models/user.dart';
 
 const Song s1 = Song(
-  album: Album(
+  album: Playlist(
+    playlistType: PlaylistType.album,
     coverUrl:
         'https://i1.wp.com/theseconddisc.com/wp-content/uploads/John-Coltrane-Another-Side-of-John-Coltrane.jpg?fit=1500%2C1472&ssl=1',
     title: 'An amazing album',
@@ -21,7 +21,8 @@ const Song s1 = Song(
       'https://firebasestorage.googleapis.com/v0/b/flutterapp-7eda9.appspot.com/o/songs%2FMoose%20Dowa-Alleycat%20Jazz.mp3?alt=media&token=ceab75c2-e9a3-4f02-9fcc-1fc4d1488e67',
 );
 const Song s2 = Song(
-  album: Album(
+  album: Playlist(
+    playlistType: PlaylistType.album,
     coverUrl: 'https://f4.bcbits.com/img/a2321763329_10.jpg',
     title: 'An amazing album',
     id: 2,
@@ -34,7 +35,8 @@ const Song s2 = Song(
       'https://firebasestorage.googleapis.com/v0/b/flutterapp-7eda9.appspot.com/o/songs%2FEngelwood-One%20Step%20Ahead.mp3?alt=media&token=d530ce34-5010-4127-9d07-154bf80a3049',
 );
 const Song s3 = Song(
-  album: Album(
+  album: Playlist(
+    playlistType: PlaylistType.album,
     coverUrl:
         'https://images-na.ssl-images-amazon.com/images/I/71fij9klnNL._SY355_.jpg',
     title: 'Its dope!',
@@ -49,12 +51,23 @@ const Song s3 = Song(
 );
 
 const Playlist p = Playlist(
-    title: 'Cool Playlist',
-    coverUrl:
-        'https://images-na.ssl-images-amazon.com/images/I/71fij9klnNL._SY355_.jpg',
-    id: 1,
-    authors: [Author(name: 'Engelwood', imageUrl: '', id: 3)],
-    songs: [s1, s2, s3]);
+  playlistType: PlaylistType.album,
+  title: 'Cool Playlist',
+  coverUrl:
+      'https://images-na.ssl-images-amazon.com/images/I/71fij9klnNL._SY355_.jpg',
+  id: 1,
+  authors: [Author(name: 'Engelwood', imageUrl: '', id: 3)],
+  songs: [s1, s2, s3],
+);
+const Playlist up = Playlist(
+  playlistType: PlaylistType.userPlaylist,
+  title: 'My Playlist',
+  coverUrl:
+      'https://f4.bcbits.com/img/a2321763329_10.jpg',
+  id: 1,
+  userAuthors: [User(id: 1, name: "Jake")],
+  songs: [s1, s2, s3],
+);
 
 class DataBloc extends Bloc<DataEvent, DataState> {
   DataBloc() : super(DataState.initialState()) {
@@ -64,7 +77,8 @@ class DataBloc extends Bloc<DataEvent, DataState> {
   _onFetchRecentlyPlayed(
       DataFetchRecentlyPlayed event, Emitter<DataState> emit) {
     emit(state.copyWith(
-      recentlyPlayed: [p],
+      recentlyPlayed: [p, up],
+      library: [p, up],
     ));
   }
 
@@ -84,22 +98,27 @@ class DataFetch extends DataEvent {}
 
 class DataState extends Equatable {
   final List<Playlist> recentlyPlayed;
+  final List<Playlist> library;
 
   const DataState({
     this.recentlyPlayed = const [],
+    this.library = const [],
   });
 
   DataState copyWith({
     List<Playlist>? recentlyPlayed,
+    List<Playlist>? library,
   }) {
     return DataState(
       recentlyPlayed: recentlyPlayed ?? this.recentlyPlayed,
+      library: library ?? this.library,
     );
   }
 
   static initialState() {
     return const DataState(
       recentlyPlayed: [],
+      library: [],
     );
   }
 

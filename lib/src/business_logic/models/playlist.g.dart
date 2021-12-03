@@ -9,19 +9,31 @@ part of 'playlist.dart';
 Playlist _$PlaylistFromJson(Map<String, dynamic> json) => Playlist(
       id: json['id'] as int,
       title: json['title'] as String,
-      authors: (json['authors'] as List<dynamic>)
-          .map((e) => Author.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      songs: (json['songs'] as List<dynamic>)
-          .map((e) => Song.fromJson(e as Map<String, dynamic>))
-          .toList(),
       coverUrl: json['coverUrl'] as String,
+      playlistType: $enumDecode(_$PlaylistTypeEnumMap, json['playlistType']),
+      songs: (json['songs'] as List<dynamic>?)
+          ?.map((e) => Song.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      authors: (json['authors'] as List<dynamic>?)
+          ?.map((e) => Author.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      userAuthors: (json['userAuthors'] as List<dynamic>?)
+          ?.map((e) => User.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$PlaylistToJson(Playlist instance) => <String, dynamic>{
       'id': instance.id,
       'title': instance.title,
       'coverUrl': instance.coverUrl,
-      'authors': instance.authors,
       'songs': instance.songs,
+      'authors': instance.authors,
+      'userAuthors': instance.userAuthors,
+      'playlistType': _$PlaylistTypeEnumMap[instance.playlistType],
     };
+
+const _$PlaylistTypeEnumMap = {
+  PlaylistType.album: 'album',
+  PlaylistType.userPlaylist: 'userPlaylist',
+  PlaylistType.single: 'single',
+};
