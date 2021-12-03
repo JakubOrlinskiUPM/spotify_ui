@@ -33,8 +33,8 @@ class _BottomListTileState extends State<BottomListTile> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(widget.state.playlist?.songs[itemIndex].title ?? ""),
-                Text(widget.state.playlist?.songs[itemIndex].authorString ?? "",
+                Text(widget.state.playlist?.songs?[itemIndex].title ?? ""),
+                Text(widget.state.playlist?.songs?[itemIndex].authorString ?? "",
                     style: Theme.of(context).textTheme.caption),
               ],
             ),

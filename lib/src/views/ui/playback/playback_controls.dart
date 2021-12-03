@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:spotify_ui/src/business_logic/blocs/player_bloc.dart';
-import 'package:spotify_ui/src/business_logic/models/album.dart';
-import 'package:spotify_ui/src/business_logic/models/author.dart';
-import 'package:spotify_ui/src/business_logic/models/playlist.dart';
-import 'package:spotify_ui/src/business_logic/models/song.dart';
 import 'package:spotify_ui/src/views/ui/playback/playback_sheet.dart';
 
 class PlaybackControls extends StatelessWidget {

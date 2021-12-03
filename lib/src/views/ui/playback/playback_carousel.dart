@@ -60,7 +60,7 @@ class _PlaybackCarouselState extends State<PlaybackCarousel> {
   @override
   Widget build(BuildContext context) {
     return PageView.builder(
-      itemCount: widget.state.playlist?.songs.length,
+      itemCount: widget.state.playlist?.songs?.length,
       controller: pageController,
       onPageChanged: (int pageNo) => _onPageChanged(context, pageNo),
       itemBuilder: (BuildContext context, int itemIndex) {
@@ -71,7 +71,7 @@ class _PlaybackCarouselState extends State<PlaybackCarousel> {
 
   void _onPageChanged(BuildContext context, int pageNo) {
     if (widget.state.playlist != null) {
-      Song s = widget.state.playlist!.songs[pageNo];
+      Song s = widget.state.playlist!.songs![pageNo];
       lock();
       BlocProvider.of<PlayerBloc>(context)
           .add(PlayerSetSongEvent(song: s));

@@ -73,7 +73,7 @@ class _PlaybackSheetState extends State<PlaybackSheet> {
                           fit: BoxFit.fill,
                           repeat: ImageRepeat.noRepeat,
                           imageUrl:
-                              state.playlist?.songs[itemIndex].album.coverUrl ??
+                              state.playlist?.songs?[itemIndex].album.coverUrl ??
                                   "",
                         ),
                       ),
