@@ -18,7 +18,7 @@ class SidescrollingListItem extends StatelessWidget {
         padding: EdgeInsets.zero,
       ),
       onPressed: () =>
-          _onButtonPressed(context, PLAYLIST_VIEW_ROUTE, "playlist"),
+          _onButtonPressed(context, PLAYLIST_VIEW_ROUTE + "/${item.id}"),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,7 +39,7 @@ class SidescrollingListItem extends StatelessWidget {
     );
   }
 
-  void _onButtonPressed(BuildContext context, String route, String itemName) {
-    Navigator.pushNamed(context, route, arguments: {itemName: item});
+  void _onButtonPressed(BuildContext context, String route) {
+    Navigator.pushNamed(context, route);
   }
 }

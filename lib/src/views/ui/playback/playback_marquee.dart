@@ -3,13 +3,18 @@ import 'package:marquee/marquee.dart';
 import 'package:spotify_ui/src/views/ui/utils.dart';
 
 class PlaybackMarquee extends StatelessWidget {
-  const PlaybackMarquee({Key? key, required this.title, required this.authors}) : super(key: key);
+  PlaybackMarquee({
+    Key? key,
+    required this.title,
+    required this.authors,
+    this.songTextStyle = const TextStyle(color: Colors.white, fontSize: 28),
+    this.authorTextStyle = const TextStyle(color: Colors.grey, fontSize: 20),
+  }) : super(key: key);
+
   final String title;
   final String authors;
-
-  static TextStyle songTextStyle = TextStyle(color: Colors.white, fontSize: 28);
-  static TextStyle authorTextStyle =
-      TextStyle(color: Colors.grey.shade400, fontSize: 20);
+  final TextStyle songTextStyle;
+  final TextStyle authorTextStyle;
 
   @override
   Widget build(BuildContext context) {

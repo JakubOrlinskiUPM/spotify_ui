@@ -35,6 +35,8 @@ class Playlist extends Equatable {
     this.songs,
     this.authors,
     this.userAuthors,
+    this.releaseYear = 2020,
+    this.colorHex = 0xff3169ba,
   });
 
   final int id;
@@ -43,6 +45,8 @@ class Playlist extends Equatable {
   final List<Song>? songs;
   final List<Author>? authors;
   final List<User>? userAuthors;
+  final int colorHex;
+  final int releaseYear;
 
   final PlaylistType playlistType;
 
@@ -50,7 +54,7 @@ class Playlist extends Equatable {
   String get heroString => '''${id.toString()}-${playlistType.toString()}-hero''';
 
   @override
-  List<Object?> get props => [id, playlistType];
+  List<Object?> get props => [id, title, playlistType];
 
   factory Playlist.fromJson(Map<String, dynamic> json) => _$PlaylistFromJson(json);
 

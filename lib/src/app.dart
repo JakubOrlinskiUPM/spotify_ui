@@ -26,10 +26,7 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        bottom: false,
-        child: tabs[_currentIndex].navigator,
-      ),
+      body: tabs[_currentIndex].navigator,
       bottomSheet: const PlaybackBottomSheet(),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(

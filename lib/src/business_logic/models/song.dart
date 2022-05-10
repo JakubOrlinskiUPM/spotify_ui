@@ -22,6 +22,7 @@ class Song extends Equatable {
   final String storageUrl;
 
   String get authorString => authors.map((a) => a.name).join(", ");
+  String get heroString => '''${id.toString()}-song-hero''';
 
   @override
   List<Object?> get props => [id];

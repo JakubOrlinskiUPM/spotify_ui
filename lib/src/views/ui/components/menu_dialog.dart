@@ -5,17 +5,19 @@ import 'package:spotify_ui/src/business_logic/models/playlist.dart';
 import 'package:spotify_ui/src/business_logic/models/song.dart';
 import 'package:spotify_ui/src/views/ui/routing.dart';
 
+class MenuDialogReturn {
+  final String route;
+  final Map? arguments;
+
+  MenuDialogReturn({required this.route, this.arguments});
+}
+
 class MenuDialog extends StatefulWidget {
-  const MenuDialog({
-    Key? key,
-    required this.playlist,
-    this.song,
-    required this.navigator
-  }) : super(key: key);
+  const MenuDialog({Key? key, required this.playlist, this.song})
+      : super(key: key);
 
   final Playlist playlist;
   final Song? song;
-  final NavigatorState navigator;
 
   @override
   _MenuDialogState createState() => _MenuDialogState();
@@ -24,29 +26,37 @@ class MenuDialog extends StatefulWidget {
 class _MenuDialogState extends State<MenuDialog> {
   @override
   Widget build(BuildContext context) {
-    return FractionallySizedBox(
-      heightFactor: 1,
-      child: Container(
-        decoration: const BoxDecoration(color: Colors.black),
-        child: FractionallySizedBox(
-          heightFactor: 0.9,
-          child: Column(
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        leading: BackButton(),
+      ),
+      body: ListView(
+        shrinkWrap: true,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              GestureDetector(
-                excludeFromSemantics: true,
-                onTap: _goBack,
-                child: SizedBox(
-                  height: 250,
+              SizedBox(
+                height: 250,
+                child: Hero(
+                  tag: widget.song!.heroString,
                   child: CachedNetworkImage(
-                    imageUrl: widget.song?.album.coverUrl ?? "",
+                    imageUrl: widget.song!.album.coverUrl,
                   ),
                 ),
               ),
               Text(
                 widget.song!.title,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.headlineLarge,
               ),
-              Text(widget.song!.authorString,
-                  style: Theme.of(context).textTheme.caption),
+              Text(
+                widget.song!.authorString,
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
               _buildMenuOption(
                 CupertinoIcons.heart,
                 "Liked",
@@ -79,7 +89,7 @@ class _MenuDialogState extends State<MenuDialog> {
               ),
             ],
           ),
-        ),
+        ],
       ),
     );
   }
@@ -94,8 +104,8 @@ class _MenuDialogState extends State<MenuDialog> {
     );
   }
 
-  void _goBack() {
-    Navigator.pop(context);
+  void _goBack(MenuDialogReturn? returnData) {
+    Navigator.of(context, rootNavigator: true).pop(returnData);
   }
 
   void _likedPressed() {}
@@ -105,9 +115,9 @@ class _MenuDialogState extends State<MenuDialog> {
   void _queueAddPressed() {}
 
   void _albumViewPressed() {
-    // widget.navigator.pushNamed(PLAYLIST_VIEW_ROUTE,
-    //     arguments: {"playlist": widget.song?.album});
-    Navigator.of(context).pop();
+    _goBack(MenuDialogReturn(
+      route: PLAYLIST_VIEW_ROUTE + "/${widget.song!.album.id}",
+    ));
   }
 
   void _sharePressed() {}

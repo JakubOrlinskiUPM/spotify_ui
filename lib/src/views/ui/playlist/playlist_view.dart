@@ -7,12 +7,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spotify_ui/src/business_logic/blocs/data_bloc.dart';
 import 'package:spotify_ui/src/business_logic/models/playlist.dart';
 import 'package:spotify_ui/src/views/ui/components/song_item.dart';
-import 'package:spotify_ui/src/views/ui/playback/playback_bottom_sheet.dart';
+import 'package:spotify_ui/src/views/ui/playlist/playlist_view_loading.dart';
 
 class PlaylistView extends StatefulWidget {
-  const PlaylistView({Key? key, required this.playlist}) : super(key: key);
+  const PlaylistView({Key? key, required this.id}) : super(key: key);
 
-  final Playlist? playlist;
+  final int id;
 
   @override
   _PlaylistViewState createState() => _PlaylistViewState();
@@ -21,38 +21,60 @@ class PlaylistView extends StatefulWidget {
 class _PlaylistViewState extends State<PlaylistView> {
   var top = 0.0;
   num minFrac = 0.85;
+  double expandedHeight = 300;
+
+  Playlist? playlist;
+
+  @override
+  void initState() {
+    playlist = BlocProvider.of<DataBloc>(context).getPlaylistById(widget.id);
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.playlist == null) {
-      return Container();
+    if (playlist == null) {
+      return const PlaylistViewLoading();
     }
 
     return CustomScrollView(
       slivers: <Widget>[
         SliverAppBar(
-          backgroundColor: Colors.black,
+          backgroundColor: Color(playlist!.colorHex),
           pinned: true,
-          expandedHeight: 300,
+          expandedHeight: expandedHeight,
           flexibleSpace: LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
             top = constraints.biggest.height;
-            var frac =
-                MediaQuery.of(context).padding.top + kToolbarHeight / top;
-            var opacity = max(0, (frac - minFrac) / (1 - minFrac)).toDouble();
+            var frac = top / (expandedHeight + kToolbarHeight);
+            frac = (frac - 0.3) / (1 - 0.3);
+            frac = frac.clamp(0, 1);
+            frac = 1 - frac;
+
             return FlexibleSpaceBar(
               title: Opacity(
-                opacity: opacity,
-                child: Text(widget.playlist!.title),
+                opacity: frac < 1 ? 0 : 1,
+                child: Text(playlist!.title),
               ),
-              background: FractionallySizedBox(
-                alignment: Alignment.topCenter,
-                heightFactor: 1 - frac,
-                child: Hero(
-                  tag: widget.playlist!.heroString,
-                  child: CachedNetworkImage(
-                      fit: BoxFit.fitHeight,
-                      imageUrl: widget.playlist!.coverUrl),
+              background: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Color(playlist!.colorHex), Colors.black],
+                  ),
+                ),
+                child: SafeArea(
+                  child: FractionallySizedBox(
+                    alignment: Alignment.topCenter,
+                    heightFactor: 1 - frac,
+                    child: Hero(
+                      tag: playlist!.heroString,
+                      child: CachedNetworkImage(
+                          fit: BoxFit.fitHeight, imageUrl: playlist!.coverUrl),
+                    ),
+                  ),
                 ),
               ),
             );
@@ -64,8 +86,20 @@ class _PlaylistViewState extends State<PlaylistView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(widget.playlist!.title),
-                Text(widget.playlist!.authorString),
+                Text(
+                  playlist!.title,
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+                Text(
+                  playlist!.authorString,
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+                Text(
+                  playlist!.playlistType.string +
+                      " " + String.fromCharCodes([0x00B7]) + " " +
+                      playlist!.releaseYear.toString(),
+                  style: Theme.of(context).textTheme.caption,
+                ),
                 Row(
                   children: [
                     IconButton(
@@ -83,19 +117,22 @@ class _PlaylistViewState extends State<PlaylistView> {
             ),
           ),
         ),
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) {
-              if (widget.playlist!.songs != null) {
-                return SongItem(
-                  song: widget.playlist!.songs![index],
-                  playlist: widget.playlist!,
-                );
-              } else {
-                return Container();
-              }
-            },
-            childCount: widget.playlist!.songs?.length,
+        SliverPadding(
+          padding: EdgeInsets.only(bottom: 60),
+          sliver: SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                if (playlist!.songs != null) {
+                  return SongItem(
+                    song: playlist!.songs![index],
+                    playlist: playlist!,
+                  );
+                } else {
+                  return Container();
+                }
+              },
+              childCount: playlist!.songs?.length,
+            ),
           ),
         ),
       ],

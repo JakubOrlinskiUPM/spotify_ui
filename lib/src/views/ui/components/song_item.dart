@@ -29,8 +29,11 @@ class SongItem extends StatelessWidget {
             leading: SizedBox(
               width: 50,
               height: 50,
-              child: CachedNetworkImage(
-                imageUrl: song.album.coverUrl,
+              child: Hero(
+                tag: song.heroString,
+                child: CachedNetworkImage(
+                  imageUrl: song.album.coverUrl,
+                ),
               ),
             ),
             title: Text(
@@ -55,20 +58,20 @@ class SongItem extends StatelessWidget {
     context.read<PlayerBloc>().add(PlayerStartedEvent());
   }
 
-  _onMenuPressed(BuildContext context) {
-    showModalBottomSheet<void>(
-      backgroundColor: Colors.black,
-      useRootNavigator: true,
-      isScrollControlled: true,
-      isDismissible: true,
-      context: context,
-      builder: (BuildContext ctx) {
+  _onMenuPressed(BuildContext context) async {
+    Route<MenuDialogReturn> route = MaterialPageRoute<MenuDialogReturn>(
+      builder: (BuildContext context) {
         return MenuDialog(
           playlist: playlist,
           song: song,
-          navigator: Navigator.of(context),
         );
       },
+      fullscreenDialog: true,
     );
+
+    MenuDialogReturn? value = await Navigator.of(context, rootNavigator: true).push(route);
+    if (value != null) {
+      Navigator.of(context).pushNamed(value.route, arguments: value.arguments);
+    }
   }
 }

@@ -39,82 +39,84 @@ class _LibraryPageState extends State<LibraryPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Wrap(
-              spacing: 10,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: [
-                CircleAvatar(
-                  backgroundColor: Colors.red.shade300,
-                  foregroundColor: Colors.white,
-                  child: const Text('OD'),
-                ),
-                Text(
-                  "Your library",
-                  style: Theme.of(context).textTheme.headline5,
-                ),
-              ],
-            ),
-            searchOpen
-                ? SizedBox(
-                    width: 100,
-                    child: TextField(
-                      onChanged: (text) {
-                        setState(() {
-                          searchText = text;
-                        });
-                      },
-                    ),
-                  )
-                : IconButton(
-                    icon: const Icon(Icons.search_outlined),
-                    onPressed: _toggleSearch,
-                  ),
-          ],
-        ),
-        Wrap(children: _buildChips(context)),
-        TextButton(
-          onPressed: _showSortBy,
-          child: Row(
+    return SafeArea(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Icon(Icons.swap_vert),
-              Text(sortBy.string),
+              Wrap(
+                spacing: 10,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Colors.red.shade300,
+                    foregroundColor: Colors.white,
+                    child: const Text('OD'),
+                  ),
+                  Text(
+                    "Your library",
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
+                ],
+              ),
+              searchOpen
+                  ? SizedBox(
+                      width: 100,
+                      child: TextField(
+                        onChanged: (text) {
+                          setState(() {
+                            searchText = text;
+                          });
+                        },
+                      ),
+                    )
+                  : IconButton(
+                      icon: const Icon(Icons.search_outlined),
+                      onPressed: _toggleSearch,
+                    ),
             ],
           ),
-        ),
-        Expanded(
-          child: BlocBuilder<DataBloc, DataState>(
-            builder: (context, state) {
-              List<Playlist> filtered = _getFilteredLibrary(state.library);
-              return ListView.builder(
-                itemCount: filtered.length,
-                itemBuilder: (BuildContext context, int index) {
-                  Playlist pl = filtered[index];
-
-                  return TextButton(
-                    onPressed: () => _routeToPlaylist(pl),
-                    child: ListTile(
-                      leading: CachedNetworkImage(imageUrl: pl.coverUrl),
-                      title: Text(pl.title),
-                      subtitle: Text(
-                          '''${pl.playlistType.string} ${utf8.decode([
-                            0xE2,
-                            0x80,
-                            0xA2
-                          ])} ${pl.authorString}'''),
-                    ),
-                  );
-                },
-              );
-            },
+          Wrap(children: _buildChips(context)),
+          TextButton(
+            onPressed: _showSortBy,
+            child: Row(
+              children: [
+                const Icon(Icons.swap_vert),
+                Text(sortBy.string),
+              ],
+            ),
           ),
-        ),
-      ],
+          Expanded(
+            child: BlocBuilder<DataBloc, DataState>(
+              builder: (context, state) {
+                List<Playlist> filtered = _getFilteredLibrary(state.library);
+                return ListView.builder(
+                  itemCount: filtered.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    Playlist pl = filtered[index];
+
+                    return TextButton(
+                      onPressed: () => _routeToPlaylist(pl),
+                      child: ListTile(
+                        leading: CachedNetworkImage(imageUrl: pl.coverUrl),
+                        title: Text(pl.title),
+                        subtitle: Text(
+                            '''${pl.playlistType.string} ${utf8.decode([
+                              0xE2,
+                              0x80,
+                              0xA2
+                            ])} ${pl.authorString}'''),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -140,8 +142,7 @@ class _LibraryPageState extends State<LibraryPage> {
   }
 
   void _routeToPlaylist(Playlist pl) {
-    Navigator.pushNamed(context, PLAYLIST_VIEW_ROUTE,
-        arguments: {"playlist": pl});
+    Navigator.pushNamed(context, PLAYLIST_VIEW_ROUTE + "/${pl.id}");
   }
 
   void _toggleSearch() {
@@ -182,19 +183,19 @@ class _LibraryPageState extends State<LibraryPage> {
       context: context,
       builder: (BuildContext ctx) {
         return Column(children: SortBy.values.map((sort) =>
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextButton(
-              onPressed: () {
-                Navigator.pop(
-                  ctx,
-                  sort,
-                );
-              },
-              child: Text(sort.string),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pop(
+                    ctx,
+                    sort,
+                  );
+                },
+                child: Text(sort.string),
+              ),
             ),
-          ),
-        ).toList());
+          ).toList());
       },
     );
     if (newSort != null) {

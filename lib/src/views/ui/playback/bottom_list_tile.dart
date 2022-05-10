@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:spotify_ui/src/business_logic/blocs/player_bloc.dart';
 import 'package:spotify_ui/src/views/ui/playback/playback_carousel.dart';
+import 'package:spotify_ui/src/views/ui/playback/playback_marquee.dart';
 
 class BottomListTile extends StatefulWidget {
   const BottomListTile({Key? key, required this.state}) : super(key: key);
@@ -33,9 +34,12 @@ class _BottomListTileState extends State<BottomListTile> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(widget.state.playlist?.songs?[itemIndex].title ?? ""),
-                Text(widget.state.playlist?.songs?[itemIndex].authorString ?? "",
-                    style: Theme.of(context).textTheme.caption),
+                PlaybackMarquee(
+                  title: widget.state.playlist?.songs?[itemIndex].title ?? "",
+                  authors: widget.state.playlist?.songs?[itemIndex].authorString ?? "",
+                  songTextStyle: Theme.of(context).textTheme.titleLarge!,
+                  authorTextStyle: Theme.of(context).textTheme.caption!,
+                ),
               ],
             ),
           ),

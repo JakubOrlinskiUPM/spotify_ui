@@ -9,13 +9,25 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<DataBloc, DataState>(builder: (context, state) {
-      return Column(
-        children: [
-          SidescrollingList(
-            name: "Recently played",
-            list: state.recentlyPlayed,
+      return Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Colors.blue, Colors.black],
+            stops: [0, 0.2]
           ),
-        ],
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              SidescrollingList(
+                name: "Recently played",
+                list: state.recentlyPlayed,
+              ),
+            ],
+          ),
+        ),
       );
     });
   }

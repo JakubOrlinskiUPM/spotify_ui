@@ -26,9 +26,9 @@ class PlaybackBottomSheet extends StatelessWidget {
                   onTap: () => _onTap(context),
                   child: Container(
                     height: 60,
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(10)),
-                      color: Color(0xff4c2d6c),
+                      color: Color(state.song!.album.colorHex),
                     ),
                     child: Stack(
                       alignment: AlignmentDirectional.bottomStart,
