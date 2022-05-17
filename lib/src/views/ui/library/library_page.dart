@@ -1,13 +1,14 @@
-import 'dart:convert';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spotify_ui/src/business_logic/blocs/data_bloc.dart';
 import 'package:spotify_ui/src/business_logic/models/playlist.dart';
+import 'package:spotify_ui/src/views/ui/components/album_list_item_detailed.dart';
+import 'package:spotify_ui/src/views/ui/components/bottom_sheet_dismiss_bar.dart';
+import 'package:spotify_ui/src/views/ui/components/middle_dot.dart';
 import 'package:spotify_ui/src/views/ui/routing.dart';
 
-enum SortBy { recentlyPlayed, recentlyAdded, alphabetical }
+enum SortBy { recentlyPlayed, recentlyAdded, alphabetical, creator }
 
 extension SortByStringExtension on SortBy {
   String get string {
@@ -18,6 +19,8 @@ extension SortByStringExtension on SortBy {
         return "Recently added";
       case SortBy.alphabetical:
         return "Alphabetical";
+      case SortBy.creator:
+        return "Creator";
       default:
         return "";
     }
@@ -95,21 +98,7 @@ class _LibraryPageState extends State<LibraryPage> {
                 return ListView.builder(
                   itemCount: filtered.length,
                   itemBuilder: (BuildContext context, int index) {
-                    Playlist pl = filtered[index];
-
-                    return TextButton(
-                      onPressed: () => _routeToPlaylist(pl),
-                      child: ListTile(
-                        leading: CachedNetworkImage(imageUrl: pl.coverUrl),
-                        title: Text(pl.title),
-                        subtitle: Text(
-                            '''${pl.playlistType.string} ${utf8.decode([
-                              0xE2,
-                              0x80,
-                              0xA2
-                            ])} ${pl.authorString}'''),
-                      ),
-                    );
+                    return AlbumListItemDetailed(item: filtered[index]);
                   },
                 );
               },
@@ -139,10 +128,6 @@ class _LibraryPageState extends State<LibraryPage> {
     filtered.sort((p1, p2) => p1.title.compareTo(p2.title));
 
     return filtered;
-  }
-
-  void _routeToPlaylist(Playlist pl) {
-    Navigator.pushNamed(context, PLAYLIST_VIEW_ROUTE + "/${pl.id}");
   }
 
   void _toggleSearch() {
@@ -180,22 +165,65 @@ class _LibraryPageState extends State<LibraryPage> {
       backgroundColor: Colors.grey.shade800,
       useRootNavigator: true,
       isDismissible: true,
+      isScrollControlled: true,
       context: context,
       builder: (BuildContext ctx) {
-        return Column(children: SortBy.values.map((sort) =>
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const BottomSheetDismissBar(),
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextButton(
-                onPressed: () {
-                  Navigator.pop(
-                    ctx,
-                    sort,
-                  );
-                },
-                child: Text(sort.string),
+              padding: const EdgeInsets.all(16.0),
+              child: SizedBox(
+                width: double.infinity,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Sort by",
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                    for (var sort in SortBy.values) ...[
+                      TextButton(
+                        style: TextButton.styleFrom(padding: EdgeInsets.all(0)),
+                        onPressed: () {
+                          Navigator.pop(
+                            ctx,
+                            sort,
+                          );
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              sort.string,
+                              style: TextStyle(
+                                  color: sort == sortBy
+                                      ? Colors.green
+                                      : Colors.white),
+                            ),
+                            if (sort == sortBy) ...[
+                              Icon(
+                                Icons.check,
+                                color: Colors.green,
+                              ),
+                            ]
+                          ],
+                        ),
+                      ),
+                    ]
+                  ],
+                ),
               ),
             ),
-          ).toList());
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Cancel"),
+            )
+          ],
+        );
       },
     );
     if (newSort != null) {

@@ -2,17 +2,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:spotify_ui/src/views/ui/routing.dart';
 
-class SidescrollingListItem extends StatelessWidget {
-  const SidescrollingListItem({Key? key, required this.item}) : super(key: key);
+class AlbumListItemBig extends StatelessWidget {
+  const AlbumListItemBig({Key? key, required this.item}) : super(key: key);
 
   final item;
 
   @override
   Widget build(BuildContext context) {
-    return _buildPlaylistItem(context);
-  }
-
-  Widget _buildPlaylistItem(BuildContext context) {
     return TextButton(
       style: TextButton.styleFrom(
         padding: EdgeInsets.zero,

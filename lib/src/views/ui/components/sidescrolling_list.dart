@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:spotify_ui/src/views/ui/components/sidescrolling_list_item.dart';
+import 'package:spotify_ui/src/views/ui/components/album_list_item_big.dart';
 
 class SidescrollingList extends StatelessWidget {
   const SidescrollingList({Key? key, required this.name, required this.list})
@@ -27,8 +27,9 @@ class SidescrollingList extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               itemCount: list.length,
               itemBuilder: (context, index) =>
-                  SidescrollingListItem(item: list[index]),
-              separatorBuilder: (BuildContext context, int index) => const SizedBox(width: 20),
+                  AlbumListItemBig(item: list[index]),
+              separatorBuilder: (BuildContext context, int index) =>
+                  const SizedBox(width: 20),
             ),
           ),
         ],

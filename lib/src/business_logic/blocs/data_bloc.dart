@@ -113,7 +113,7 @@ List<Playlist> ALBUM_LIST = [
   Playlist(
     playlistType: PlaylistType.album,
     coverUrl:
-    'https://i1.wp.com/theseconddisc.com/wp-content/uploads/John-Coltrane-Another-Side-of-John-Coltrane.jpg?fit=1500%2C1472&ssl=1',
+        'https://i1.wp.com/theseconddisc.com/wp-content/uploads/John-Coltrane-Another-Side-of-John-Coltrane.jpg?fit=1500%2C1472&ssl=1',
     title: 'An amazing album',
     id: 1,
     authors: [AUTHOR_LIST[0]],
@@ -130,7 +130,7 @@ List<Playlist> ALBUM_LIST = [
   Playlist(
     playlistType: PlaylistType.album,
     coverUrl:
-    'https://images-na.ssl-images-amazon.com/images/I/71fij9klnNL._SY355_.jpg',
+        'https://images-na.ssl-images-amazon.com/images/I/71fij9klnNL._SY355_.jpg',
     title: 'Its dope!',
     id: 3,
     authors: [AUTHOR_LIST[2]],
@@ -139,7 +139,7 @@ List<Playlist> ALBUM_LIST = [
   Playlist(
     playlistType: PlaylistType.album,
     coverUrl:
-    'https://images-na.ssl-images-amazon.com/images/I/71fij9klnNL._SY355_.jpg',
+        'https://images-na.ssl-images-amazon.com/images/I/71fij9klnNL._SY355_.jpg',
     title: 'The album of goths',
     id: 4,
     authors: [AUTHOR_LIST[3]],
@@ -166,6 +166,46 @@ List<Playlist> PLAYLIST_LIST = [
     songs: SONG_LIST,
     colorHex: 0xff03347b,
   ),
+  Playlist(
+    playlistType: PlaylistType.userPlaylist,
+    title: 'Another playlist',
+    coverUrl:
+        'https://media.gq.com/photos/5ae3925b3fb87856d8a5cdf6/3:2/w_1848,h_1232,c_limit/Road-Trip-Playlist-GQ-April-2018-042718-3x2.png',
+    id: 7,
+    userAuthors: [USER_LIST[0]],
+    songs: SONG_LIST,
+    colorHex: 0xff69037b,
+  ),
+  Playlist(
+    playlistType: PlaylistType.userPlaylist,
+    title: 'My favorties',
+    coverUrl:
+        'https://i1.sndcdn.com/avatars-wpOz0Tqdl3eoO4WM-O3P1Qw-t500x500.jpg',
+    id: 8,
+    userAuthors: [USER_LIST[0]],
+    songs: SONG_LIST,
+    colorHex: 0xff69037b,
+  ),
+  Playlist(
+    playlistType: PlaylistType.userPlaylist,
+    title: '12/05/2021',
+    coverUrl:
+        'https://img.myloview.es/posters/playlist-700-241919855.jpg',
+    id: 9,
+    userAuthors: [USER_LIST[0]],
+    songs: SONG_LIST,
+    colorHex: 0xff69037b,
+  ),
+  Playlist(
+    playlistType: PlaylistType.userPlaylist,
+    title: 'Top 50',
+    coverUrl:
+        'https://charts-images.scdn.co/assets/locale_en/regional/daily/region_global_large.jpg',
+    id: 10,
+    userAuthors: [USER_LIST[0]],
+    songs: SONG_LIST,
+    colorHex: 0xff69037b,
+  ),
 ];
 
 class DataBloc extends Bloc<DataEvent, DataState> {
@@ -178,11 +218,13 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     emit(state.copyWith(
       recentlyPlayed: PLAYLIST_LIST,
       library: PLAYLIST_LIST,
+      recommended: ALBUM_LIST,
     ));
   }
 
   Playlist? getPlaylistById(int id) {
-    Playlist? res = PLAYLIST_LIST.firstWhere((playlist) => playlist.id == id, orElse: () => ALBUM_LIST.firstWhere((playlist) => playlist.id == id));
+    Playlist? res = PLAYLIST_LIST.firstWhere((playlist) => playlist.id == id,
+        orElse: () => ALBUM_LIST.firstWhere((playlist) => playlist.id == id));
     return res;
   }
 }
@@ -199,19 +241,23 @@ class DataFetch extends DataEvent {}
 class DataState extends Equatable {
   final List<Playlist> recentlyPlayed;
   final List<Playlist> library;
+  final List<Playlist> recommended;
 
   const DataState({
     this.recentlyPlayed = const [],
     this.library = const [],
+    this.recommended = const [],
   });
 
   DataState copyWith({
     List<Playlist>? recentlyPlayed,
     List<Playlist>? library,
+    List<Playlist>? recommended,
   }) {
     return DataState(
       recentlyPlayed: recentlyPlayed ?? this.recentlyPlayed,
       library: library ?? this.library,
+      recommended: recommended ?? this.recommended,
     );
   }
 
@@ -219,6 +265,7 @@ class DataState extends Equatable {
     return const DataState(
       recentlyPlayed: [],
       library: [],
+      recommended: [],
     );
   }
 

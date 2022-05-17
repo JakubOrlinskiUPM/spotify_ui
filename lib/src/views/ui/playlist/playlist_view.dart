@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spotify_ui/src/business_logic/blocs/data_bloc.dart';
 import 'package:spotify_ui/src/business_logic/models/playlist.dart';
+import 'package:spotify_ui/src/views/ui/components/middle_dot.dart';
 import 'package:spotify_ui/src/views/ui/components/song_item.dart';
 import 'package:spotify_ui/src/views/ui/playlist/playlist_view_loading.dart';
 
@@ -94,11 +95,18 @@ class _PlaylistViewState extends State<PlaylistView> {
                   playlist!.authorString,
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
-                Text(
-                  playlist!.playlistType.string +
-                      " " + String.fromCharCodes([0x00B7]) + " " +
+                Row(
+                  children: [
+                    Text(
+                      playlist!.playlistType.string,
+                      style: Theme.of(context).textTheme.caption,
+                    ),
+                    const MiddleDot(),
+                    Text(
                       playlist!.releaseYear.toString(),
-                  style: Theme.of(context).textTheme.caption,
+                      style: Theme.of(context).textTheme.caption,
+                    ),
+                  ],
                 ),
                 Row(
                   children: [

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spotify_ui/src/business_logic/blocs/data_bloc.dart';
+import 'package:spotify_ui/src/views/ui/components/grid_list.dart';
 import 'package:spotify_ui/src/views/ui/components/sidescrolling_list.dart';
 
 class HomePage extends StatelessWidget {
@@ -19,11 +20,13 @@ class HomePage extends StatelessWidget {
           ),
         ),
         child: SafeArea(
-          child: Column(
+          child: ListView(
+            shrinkWrap: true,
             children: [
+              GridList(name: "Recently played", list: state.recentlyPlayed),
               SidescrollingList(
-                name: "Recently played",
-                list: state.recentlyPlayed,
+                name: "Recommended for today",
+                list: state.recommended,
               ),
             ],
           ),
