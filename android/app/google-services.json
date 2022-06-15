@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "926356738445",
+    "project_id": "spotifyui-bfaba",
+    "storage_bucket": "spotifyui-bfaba.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:926356738445:android:f96911f1c39355c1322dc4",
+        "android_client_info": {
+          "package_name": "com.example.spotify_admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "926356738445-fn9o2c0air9ab9pajgt0nehmanaf1h4o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBEV8orgtZSRvLWU3yii0ubgIMN0G7ciT4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "926356738445-fn9o2c0air9ab9pajgt0nehmanaf1h4o.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "926356738445-5g37o2f9ofce1httsa5vo9laod5ofmu5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.spotifyAdmin"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:926356738445:android:bee1b9d3b936ee5a322dc4",
+        "android_client_info": {
+          "package_name": "com.example.spotify_ui"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "926356738445-fn9o2c0air9ab9pajgt0nehmanaf1h4o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBEV8orgtZSRvLWU3yii0ubgIMN0G7ciT4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "926356738445-fn9o2c0air9ab9pajgt0nehmanaf1h4o.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "926356738445-5g37o2f9ofce1httsa5vo9laod5ofmu5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.spotifyAdmin"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
