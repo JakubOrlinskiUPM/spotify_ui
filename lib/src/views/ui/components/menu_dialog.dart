@@ -82,6 +82,12 @@ class _MenuDialogState extends State<MenuDialog> {
                 false,
               ),
               _buildMenuOption(
+                Icons.person,
+                "View artist",
+                _artistViewPressed,
+                false,
+              ),
+              _buildMenuOption(
                 Icons.share,
                 "Share",
                 _sharePressed,
@@ -117,6 +123,12 @@ class _MenuDialogState extends State<MenuDialog> {
   void _albumViewPressed() {
     _goBack(MenuDialogReturn(
       route: PLAYLIST_VIEW_ROUTE + "/${widget.song!.album.id}",
+    ));
+  }
+
+  void _artistViewPressed() {
+    _goBack(MenuDialogReturn(
+      route: AUTHOR_VIEW_ROUTE + "/${widget.song!.authors[0].id}",
     ));
   }
 
