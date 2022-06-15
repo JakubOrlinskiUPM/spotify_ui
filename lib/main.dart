@@ -1,13 +1,16 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
+import 'package:spotify_ui/firebase_options.dart';
 
 import 'package:spotify_ui/src/app.dart';
 import 'package:spotify_ui/src/business_logic/blocs/data_bloc.dart';
 import 'package:spotify_ui/src/business_logic/blocs/player_bloc.dart';
 import 'package:spotify_ui/src/business_logic/providers/playback_slider_provider.dart';
+import 'package:spotify_ui/src/views/ui/components/custom_future_builder.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,16 +61,26 @@ void main() {
             textButtonTheme: TextButtonThemeData(
               style: ButtonStyle(
                 alignment: Alignment.centerLeft,
-                shadowColor: MaterialStateProperty.all<Color>(Colors.transparent),
-                overlayColor: MaterialStateProperty.all<Color>(Colors.grey.shade800),
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
+                shadowColor:
+                    MaterialStateProperty.all<Color>(Colors.transparent),
+                overlayColor:
+                    MaterialStateProperty.all<Color>(Colors.grey.shade800),
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.transparent),
                 foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
               ),
             ),
           ),
           themeMode: ThemeMode.dark,
-          home: App(),
-        )
+          home: CustomFutureBuilder(
+            future: Firebase.initializeApp(
+              options: DefaultFirebaseOptions.currentPlatform,
+            ),
+            child: (Object? _) {
+              return App();
+            },
+          ),
+        ),
       ),
     ),
   );
