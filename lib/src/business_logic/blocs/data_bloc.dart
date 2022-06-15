@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spotify_ui/src/business_logic/models/author.dart';
 import 'package:spotify_ui/src/business_logic/models/playlist.dart';
@@ -6,11 +7,31 @@ import 'package:spotify_ui/src/business_logic/models/song.dart';
 import 'package:spotify_ui/src/business_logic/models/user.dart';
 
 const List<Author> AUTHOR_LIST = [
-  Author(name: 'John Coltrane', imageUrl: '', id: 1),
-  Author(name: 'Engelwood', imageUrl: '', id: 2),
-  Author(name: 'NZCA Lines', imageUrl: '', id: 3),
-  Author(name: 'The Briarwoods', imageUrl: '', id: 4),
-  Author(name: 'Prinzhorn High Drama Society', imageUrl: '', id: 5),
+  Author(
+      id: 1,
+      name: 'John Coltrane',
+      imageUrl:
+          'https://i.scdn.co/image/ab6761610000e5eb73c7f7505c1af82929ec41df'),
+  Author(
+      id: 2,
+      name: 'Engelwood',
+      imageUrl:
+          'https://edmidentity.com/wp-content/uploads/2021/02/cGrknm_Q-696x464.jpeg'),
+  Author(
+      id: 3,
+      name: 'NZCA Lines',
+      imageUrl:
+          'https://i.guim.co.uk/img/media/9f68d75cee3f21b7ffca69ccfdb8051804c0b532/163_0_3458_2076/master/3458.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=24cde21289c5935f24efd6abe238bd83'),
+  Author(
+      id: 4,
+      name: 'The Briarwoods',
+      imageUrl:
+          'https://media.distractify.com/brand-img/QQZqP1Fw1/0x0/delilah-briarwood-vox-machina-1643385858271.jpg'),
+  Author(
+      id: 5,
+      name: 'Prinzhorn Dance School',
+      imageUrl:
+          'https://www.dachstock.ch/wp-content/uploads/2016/07/Prinzhorn-Dance-School-e1469018148724.jpg'),
 ];
 
 const List<User> USER_LIST = [
@@ -32,6 +53,7 @@ List<Song> SONG_LIST = [
     authors: [Author(name: 'John Coltrane', imageUrl: '', id: 1)],
     storageUrl:
         'https://firebasestorage.googleapis.com/v0/b/flutterapp-7eda9.appspot.com/o/songs%2FMoose%20Dowa-Alleycat%20Jazz.mp3?alt=media&token=ceab75c2-e9a3-4f02-9fcc-1fc4d1488e67',
+    listenCount: 214214,
   ),
   Song(
     album: Playlist(
@@ -46,6 +68,7 @@ List<Song> SONG_LIST = [
     authors: [AUTHOR_LIST[1]],
     storageUrl:
         'https://firebasestorage.googleapis.com/v0/b/flutterapp-7eda9.appspot.com/o/songs%2FEngelwood-One%20Step%20Ahead.mp3?alt=media&token=d530ce34-5010-4127-9d07-154bf80a3049',
+    listenCount: 32551,
   ),
   Song(
     album: Playlist(
@@ -61,6 +84,7 @@ List<Song> SONG_LIST = [
     authors: [AUTHOR_LIST[1]],
     storageUrl:
         'https://firebasestorage.googleapis.com/v0/b/flutterapp-7eda9.appspot.com/o/songs%2FNZCA%20LINES-Opening%20Night.mp3?alt=media&token=2ecdef2d-adff-496a-97b1-f695b30be405',
+    listenCount: 162321,
   ),
   Song(
     album: Playlist(
@@ -76,6 +100,7 @@ List<Song> SONG_LIST = [
     authors: [AUTHOR_LIST[3]],
     storageUrl:
         'https://firebasestorage.googleapis.com/v0/b/flutterapp-7eda9.appspot.com/o/songs%2FNZCA%20LINES-Opening%20Night.mp3?alt=media&token=2ecdef2d-adff-496a-97b1-f695b30be405',
+    listenCount: 985223,
   ),
   Song(
     album: Playlist(
@@ -91,6 +116,7 @@ List<Song> SONG_LIST = [
     authors: [AUTHOR_LIST[3]],
     storageUrl:
         'https://firebasestorage.googleapis.com/v0/b/flutterapp-7eda9.appspot.com/o/songs%2FNZCA%20LINES-Opening%20Night.mp3?alt=media&token=2ecdef2d-adff-496a-97b1-f695b30be405',
+    listenCount: 1285120,
   ),
   Song(
     album: Playlist(
@@ -106,6 +132,7 @@ List<Song> SONG_LIST = [
     authors: [AUTHOR_LIST[3]],
     storageUrl:
         'https://firebasestorage.googleapis.com/v0/b/flutterapp-7eda9.appspot.com/o/songs%2FNZCA%20LINES-Opening%20Night.mp3?alt=media&token=2ecdef2d-adff-496a-97b1-f695b30be405',
+    listenCount: 1241211,
   ),
 ];
 
@@ -189,8 +216,7 @@ List<Playlist> PLAYLIST_LIST = [
   Playlist(
     playlistType: PlaylistType.userPlaylist,
     title: '12/05/2021',
-    coverUrl:
-        'https://img.myloview.es/posters/playlist-700-241919855.jpg',
+    coverUrl: 'https://img.myloview.es/posters/playlist-700-241919855.jpg',
     id: 9,
     userAuthors: [USER_LIST[0]],
     songs: SONG_LIST,
@@ -222,10 +248,46 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     ));
   }
 
-  Playlist? getPlaylistById(int id) {
-    Playlist? res = PLAYLIST_LIST.firstWhere((playlist) => playlist.id == id,
-        orElse: () => ALBUM_LIST.firstWhere((playlist) => playlist.id == id));
-    return res;
+  Future<Playlist?> getPlaylistById(String id) {
+    return state.playlistsRef.doc(id).get().then((DocumentSnapshot doc) {
+      final json = doc.data() as Map<String, dynamic>;
+      return Playlist.fromJson(json);
+    });
+  }
+
+  Future<List<Song>> getPlaylistSongs(String id) {
+    return state.playlistsRef
+        .doc(id)
+        .collection("songs")
+        .get()
+        .then((QuerySnapshot snap) {
+      return snap.docs
+          .map((doc) => Song.fromJson(doc.data() as Map<String, dynamic>))
+          .toList();
+    });
+  }
+
+  Author? getAuthorById(int id) {
+    return AUTHOR_LIST.firstWhere((author) => author.id == id);
+  }
+
+  List<Playlist> getAuthorAlbums(Author author) {
+    return ALBUM_LIST
+        .where((album) => album.authors!.contains(author))
+        .toList();
+  }
+
+  Playlist getAuthorTopPlaylist(Author author) {
+    List<Song> songs =
+        SONG_LIST.where((Song song) => song.authors.contains(author)).toList();
+
+    return Playlist(
+      id: -1,
+      title: author.name + " top 5",
+      coverUrl: "",
+      playlistType: PlaylistType.artistPlaylist,
+      songs: songs,
+    );
   }
 }
 
@@ -242,12 +304,22 @@ class DataState extends Equatable {
   final List<Playlist> recentlyPlayed;
   final List<Playlist> library;
   final List<Playlist> recommended;
+  final FirebaseFirestore db = FirebaseFirestore.instance;
+  late CollectionReference songsRef;
+  late CollectionReference playlistsRef;
+  late CollectionReference authorsRef;
+  late CollectionReference userRef;
 
-  const DataState({
+  DataState({
     this.recentlyPlayed = const [],
     this.library = const [],
     this.recommended = const [],
-  });
+  }) {
+    songsRef = db.collection("songs");
+    playlistsRef = db.collection("playlists");
+    authorsRef = db.collection("authors");
+    userRef = db.collection("users");
+  }
 
   DataState copyWith({
     List<Playlist>? recentlyPlayed,
@@ -262,7 +334,7 @@ class DataState extends Equatable {
   }
 
   static initialState() {
-    return const DataState(
+    return DataState(
       recentlyPlayed: [],
       library: [],
       recommended: [],

@@ -20,6 +20,8 @@ Playlist _$PlaylistFromJson(Map<String, dynamic> json) => Playlist(
       userAuthors: (json['userAuthors'] as List<dynamic>?)
           ?.map((e) => User.fromJson(e as Map<String, dynamic>))
           .toList(),
+      releaseYear: json['releaseYear'] as int? ?? 2020,
+      colorHex: json['colorHex'] as int? ?? 0xff3169ba,
     );
 
 Map<String, dynamic> _$PlaylistToJson(Playlist instance) => <String, dynamic>{
@@ -29,6 +31,8 @@ Map<String, dynamic> _$PlaylistToJson(Playlist instance) => <String, dynamic>{
       'songs': instance.songs,
       'authors': instance.authors,
       'userAuthors': instance.userAuthors,
+      'colorHex': instance.colorHex,
+      'releaseYear': instance.releaseYear,
       'playlistType': _$PlaylistTypeEnumMap[instance.playlistType],
     };
 
@@ -36,4 +40,6 @@ const _$PlaylistTypeEnumMap = {
   PlaylistType.album: 'album',
   PlaylistType.userPlaylist: 'userPlaylist',
   PlaylistType.single: 'single',
+  PlaylistType.podcast: 'podcast',
+  PlaylistType.artistPlaylist: 'artistPlaylist',
 };

@@ -6,7 +6,7 @@ import 'package:spotify_ui/src/business_logic/models/user.dart';
 
 part 'playlist.g.dart';
 
-enum PlaylistType { album, userPlaylist, single, podcast }
+enum PlaylistType { album, userPlaylist, single, podcast, artistPlaylist }
 
 extension PlaylistTypeStringExtension on PlaylistType {
   String get string {
@@ -19,8 +19,27 @@ extension PlaylistTypeStringExtension on PlaylistType {
         return "EP";
       case PlaylistType.podcast:
         return "Podcast";
+      case PlaylistType.artistPlaylist:
+        return "Artist Playlist";
       default:
         return "";
+    }
+  }
+
+  int get integer {
+    switch (this) {
+      case PlaylistType.album:
+        return 0;
+      case PlaylistType.userPlaylist:
+        return 1;
+      case PlaylistType.single:
+        return 2;
+      case PlaylistType.podcast:
+        return 3;
+      case PlaylistType.artistPlaylist:
+        return 4;
+      default:
+        return -1;
     }
   }
 }

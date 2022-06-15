@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:spotify_ui/src/business_logic/models/author.dart';
 import 'package:spotify_ui/src/business_logic/models/playlist.dart';
@@ -13,6 +14,7 @@ class Song extends Equatable {
     required this.authors,
     required this.album,
     required this.storageUrl,
+    required this.listenCount,
   });
 
   final int id;
@@ -20,9 +22,14 @@ class Song extends Equatable {
   final List<Author> authors;
   final Playlist album;
   final String storageUrl;
+  final int listenCount;
 
   String get authorString => authors.map((a) => a.name).join(", ");
+
   String get heroString => '''${id.toString()}-song-hero''';
+
+  String get listenCountString =>
+      NumberFormat.decimalPattern().format(listenCount);
 
   @override
   List<Object?> get props => [id];
