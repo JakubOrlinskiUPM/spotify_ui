@@ -34,17 +34,14 @@ class AlbumListItemSmall extends StatelessWidget {
                 height: height,
                 child: Hero(
                   tag: item.heroString,
-                  child: CachedNetworkImage(
-                    imageUrl: item.coverUrl,
-                    fit: BoxFit.fill,
-                  ),
+                  child: CachedNetworkImage(imageUrl: item.imageUrl, fit: BoxFit.fill),
                 ),
               ),
               SizedBox(
                 width: itemWidth,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(item.title),
+                  child: Text(item.name),
                 ),
               ),
             ],

@@ -16,6 +16,8 @@ class CustomFutureBuilder<T> extends StatelessWidget {
         if (snapshot.hasData) {
           return child(snapshot.data as T);
         } else if (snapshot.hasError) {
+          print("___ ERRROR! ___ " + snapshot.error.toString());
+          print("___ ERRROR! ___ " + snapshot.stackTrace.toString());
           return Center(
               child: Container(
             child: Text("Error"),

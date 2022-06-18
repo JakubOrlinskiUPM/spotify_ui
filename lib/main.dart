@@ -12,19 +12,22 @@ import 'package:spotify_ui/src/business_logic/blocs/player_bloc.dart';
 import 'package:spotify_ui/src/business_logic/providers/playback_slider_provider.dart';
 import 'package:spotify_ui/src/views/ui/components/custom_future_builder.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   Bloc.observer = SimpleBlocObserver();
   AudioPlayer audioPlayer = AudioPlayer();
+  DataBloc dataBloc = DataBloc();
   runApp(
     MultiBlocProvider(
       providers: [
         BlocProvider<PlayerBloc>(
-          create: (context) => PlayerBloc(audioPlayer),
+          create: (context) => PlayerBloc(audioPlayer, dataBloc),
         ),
         BlocProvider<DataBloc>(
-          create: (context) => DataBloc()
+          create: (context) => dataBloc
             ..add(DataFetchRecentlyPlayed())
             ..add(DataFetch()),
         )
@@ -72,14 +75,7 @@ void main() {
             ),
           ),
           themeMode: ThemeMode.dark,
-          home: CustomFutureBuilder(
-            future: Firebase.initializeApp(
-              options: DefaultFirebaseOptions.currentPlatform,
-            ),
-            child: (Object? _) {
-              return App();
-            },
-          ),
+          home: App(),
         ),
       ),
     ),

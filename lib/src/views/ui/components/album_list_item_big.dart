@@ -22,11 +22,11 @@ class AlbumListItemBig extends StatelessWidget {
           Expanded(
             child: Hero(
                 tag: item.heroString,
-                child: CachedNetworkImage(imageUrl: item.coverUrl)),
+                child: CachedNetworkImage(imageUrl: item.imageUrl)),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 6, bottom: 3),
-            child: Text(item.title),
+            child: Text(item.name),
           ),
           Text(item.authorString,
               style: Theme.of(context).textTheme.caption),

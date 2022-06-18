@@ -26,9 +26,9 @@ class AlbumListItemDetailed extends StatelessWidget {
           leading: SizedBox(
             width: height,
             height: height,
-            child: CachedNetworkImage(imageUrl: item.coverUrl, fit: BoxFit.fill,),
+            child: CachedNetworkImage(imageUrl: item.imageUrl, fit: BoxFit.fill,),
           ),
-          title: Text(item.title),
+          title: Text(item.name),
           subtitle: Row(
             children: [
               Text(item.playlistType.string),

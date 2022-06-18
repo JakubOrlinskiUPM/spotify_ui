@@ -44,12 +44,12 @@ class _MenuDialogState extends State<MenuDialog> {
                 child: Hero(
                   tag: widget.song!.heroString,
                   child: CachedNetworkImage(
-                    imageUrl: widget.song!.album.coverUrl,
+                    imageUrl: widget.song!.album.imageUrl,
                   ),
                 ),
               ),
               Text(
-                widget.song!.title,
+                widget.song!.name,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.headlineLarge,
               ),

@@ -7,24 +7,46 @@ const String AUTHOR_VIEW_ROUTE = "authorView";
 
 MaterialPageRoute? checkGeneralRoutes(route) {
   if (route.name.toString().startsWith(PLAYLIST_VIEW_ROUTE)) {
-      String? id = route.name.split("/")[1];
-      if (id != null) {
-        return MaterialPageRoute(
-          settings: route,
-          builder: (context) {
-            return PlaylistView(id: id);
-          },
-        );
-      }
+    String? id = route.name.split("/")[1];
+    if (id != null) {
+      return MaterialPageRoute(
+        settings: route,
+        builder: (context) {
+          return PlaylistView(id: id);
+        },
+      );
+    }
   } else if (route.name.toString().startsWith(AUTHOR_VIEW_ROUTE)) {
-      int? id = int.tryParse(route.name.split("/")[1]);
-      if (id != null) {
-        return MaterialPageRoute(
-          settings: route,
-          builder: (context) {
-            return AuthorView(id: id);
-          },
-        );
-      }
+    String? id = route.name.split("/")[1];
+    if (id != null) {
+      return MaterialPageRoute(
+        settings: route,
+        builder: (context) {
+          return AuthorView(id: id);
+        },
+      );
+    }
   }
+}
+
+
+extension NavigatorStateExtension on NavigatorState {
+
+  void pushNamedIfNotCurrent( String routeName, {Object? arguments} ) {
+    if (!isCurrent(routeName)) {
+      pushNamed( routeName, arguments: arguments );
+    }
+  }
+
+  bool isCurrent( String routeName ) {
+    bool isCurrent = false;
+    popUntil( (route) {
+      if (route.settings.name == routeName) {
+        isCurrent = true;
+      }
+      return true;
+    } );
+    return isCurrent;
+  }
+
 }
