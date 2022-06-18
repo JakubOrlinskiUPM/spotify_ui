@@ -120,12 +120,12 @@ class _LibraryPageState extends State<LibraryPage> {
     if (searchText.isNotEmpty) {
       filtered = filtered
           .where((pl) =>
-              pl.title.toLowerCase().contains(searchText.toLowerCase()) ||
+              pl.name.toLowerCase().contains(searchText.toLowerCase()) ||
               pl.authorString.toLowerCase().contains(searchText.toLowerCase()))
           .toList();
     }
 
-    filtered.sort((p1, p2) => p1.title.compareTo(p2.title));
+    filtered.sort((p1, p2) => p1.name.compareTo(p2.name));
 
     return filtered;
   }

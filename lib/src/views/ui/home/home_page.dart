@@ -24,10 +24,10 @@ class HomePage extends StatelessWidget {
             shrinkWrap: true,
             children: [
               GridList(name: "Recently played", list: state.recentlyPlayed),
-              SidescrollingList(
-                name: "Recommended for today",
-                list: state.recommended,
-              ),
+              // SidescrollingList(
+              //   name: "Recommended for today",
+              //   list: state.recommended,
+              // ),
             ],
           ),
         ),
