@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spotify_ui/src/business_logic/blocs/data_bloc.dart';
 import 'package:spotify_ui/src/business_logic/models/playlist.dart';
 import 'package:spotify_ui/src/business_logic/models/song.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -12,8 +13,10 @@ part 'player_state.dart';
 
 class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   AudioPlayer audioPlayer;
+  DataBloc dataBloc;
 
-  PlayerBloc(this.audioPlayer) : super(PlayerState.initialState()) {
+  PlayerBloc(this.audioPlayer, this.dataBloc)
+      : super(PlayerState.initialState()) {
     on<PlayerSetSongEvent>(_onPlayerSetSong);
     on<PlayerStartedEvent>(_onPlayerStarted);
     on<PlayerStoppedEvent>(_onPlayerStopped);
@@ -22,20 +25,36 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     on<PlayerPositionEvent>(_onPlayerPosition);
 
     audioPlayer.onPlayerCompletion.listen((event) {
-      Song? s = state.playlist?.songs?[state.songIndex + 1];
+      Song? s = state.playlist?.songs[state.songIndex + 1];
       if (s != null) {
         add(PlayerSetSongEvent(song: s));
       }
     });
   }
 
-  void _onPlayerSetSong(PlayerSetSongEvent event, Emitter<PlayerState> emit) {
+  @override
+  Future<void> close() {
+    audioPlayer.dispose();
+    return super.close();
+  }
+
+  Future<void> _onPlayerSetSong(
+      PlayerSetSongEvent event, Emitter<PlayerState> emit) async {
     emit(state.copyWith(
       song: event.song,
       playlist: event.playlist,
-      songIndex: state.playlist?.songs?.indexOf(event.song) ?? 0,
+      songIndex: state.playlist?.songs.indexOf(event.song) ?? 0,
     ));
     audioPlayer.play(event.song.storageUrl);
+
+    if (event.playlist != null && event.playlist!.songs.isEmpty) {
+      List<Song> songs = await dataBloc.getPlaylistSongs(event.playlist!);
+      event.playlist!.songs = songs;
+      emit(state.copyWith(
+        playlist: event.playlist,
+      ));
+    }
+    add(PlayerStartedEvent());
   }
 
   void _onPlayerPosition(PlayerPositionEvent event, Emitter<PlayerState> emit) {

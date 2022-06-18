@@ -7,13 +7,22 @@ part of 'author.dart';
 // **************************************************************************
 
 Author _$AuthorFromJson(Map<String, dynamic> json) => Author(
-      id: json['id'] as int,
+      id: json['id'] as String,
       name: json['name'] as String,
-      imageUrl: json['imageUrl'] as String,
+      imageUrl: json['image_url'] as String,
+      imagePath: json['image_path'] as String,
+      albums:
+          (json['albums'] as List<dynamic>).map((e) => e as String).toList(),
+      popularSongIds: (json['popular_song_ids'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
     );
 
 Map<String, dynamic> _$AuthorToJson(Author instance) => <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
-      'imageUrl': instance.imageUrl,
+      'image_url': instance.imageUrl,
+      'image_path': instance.imagePath,
+      'albums': instance.albums,
+      'popular_song_ids': instance.popularSongIds,
     };

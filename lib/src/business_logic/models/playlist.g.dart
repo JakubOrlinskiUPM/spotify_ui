@@ -7,39 +7,33 @@ part of 'playlist.dart';
 // **************************************************************************
 
 Playlist _$PlaylistFromJson(Map<String, dynamic> json) => Playlist(
-      id: json['id'] as int,
-      title: json['title'] as String,
-      coverUrl: json['coverUrl'] as String,
-      playlistType: $enumDecode(_$PlaylistTypeEnumMap, json['playlistType']),
+      id: json['id'] as String,
+      name: json['name'] as String,
+      imageUrl: json['image_url'] as String,
+      imagePath: json['image_path'] as String,
+      playlistType: Playlist.getType(json['type'] as int),
+      songIds:
+          (json['song_ids'] as List<dynamic>).map((e) => e as String).toList(),
+      authors: (json['authors'] as List<dynamic>)
+          .map((e) => AuthorStub.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      colorHex: json['color_hex'] as int,
+      releaseYear: json['release_year'] as int,
       songs: (json['songs'] as List<dynamic>?)
-          ?.map((e) => Song.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      authors: (json['authors'] as List<dynamic>?)
-          ?.map((e) => Author.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      userAuthors: (json['userAuthors'] as List<dynamic>?)
-          ?.map((e) => User.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      releaseYear: json['releaseYear'] as int? ?? 2020,
-      colorHex: json['colorHex'] as int? ?? 0xff3169ba,
+              ?.map((e) => Song.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$PlaylistToJson(Playlist instance) => <String, dynamic>{
       'id': instance.id,
-      'title': instance.title,
-      'coverUrl': instance.coverUrl,
-      'songs': instance.songs,
-      'authors': instance.authors,
-      'userAuthors': instance.userAuthors,
-      'colorHex': instance.colorHex,
-      'releaseYear': instance.releaseYear,
-      'playlistType': _$PlaylistTypeEnumMap[instance.playlistType],
+      'name': instance.name,
+      'image_url': instance.imageUrl,
+      'image_path': instance.imagePath,
+      'song_ids': instance.songIds,
+      'songs': instance.songs.map((e) => e.toJson()).toList(),
+      'authors': instance.authors.map((e) => e.toJson()).toList(),
+      'color_hex': instance.colorHex,
+      'release_year': instance.releaseYear,
+      'type': Playlist.getInt(instance.playlistType),
     };
-
-const _$PlaylistTypeEnumMap = {
-  PlaylistType.album: 'album',
-  PlaylistType.userPlaylist: 'userPlaylist',
-  PlaylistType.single: 'single',
-  PlaylistType.podcast: 'podcast',
-  PlaylistType.artistPlaylist: 'artistPlaylist',
-};
