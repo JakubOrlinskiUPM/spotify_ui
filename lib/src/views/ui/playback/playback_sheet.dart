@@ -6,16 +6,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:spotify_ui/src/business_logic/blocs/player_bloc.dart';
+import 'package:spotify_ui/src/business_logic/models/playlist.dart';
 import 'package:spotify_ui/src/views/ui/playback/playback_carousel.dart';
 import 'package:spotify_ui/src/views/ui/playback/playback_controls.dart';
 import 'package:spotify_ui/src/views/ui/playback/playback_marquee.dart';
 import 'package:spotify_ui/src/views/ui/playback/playback_slider.dart';
+import 'package:spotify_ui/src/views/ui/routing.dart';
 
 class PlaybackSheet extends StatefulWidget {
-  const PlaybackSheet({Key? key}) : super(key: key);
+  const PlaybackSheet({Key? key, required this.currentNavigator})
+      : super(key: key);
 
-  static const double EDGE_PADDING = 28;
+  static const double EDGE_PADDING = 14;
   static const double ICON_SIZE = 50;
+
+  final GlobalKey<NavigatorState> currentNavigator;
 
   @override
   _PlaybackSheetState createState() => _PlaybackSheetState();
@@ -26,12 +31,12 @@ class _PlaybackSheetState extends State<PlaybackSheet> {
   Widget build(BuildContext context) {
     return BlocBuilder<PlayerBloc, PlayerState>(builder: (context, state) {
       return Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomCenter,
               colors: [
-                Color(0xff057cc9),
+                Color(state.song!.album.colorHex),
                 Color(0xff000000),
               ],
               stops: [
@@ -50,7 +55,21 @@ class _PlaybackSheetState extends State<PlaybackSheet> {
                 icon: Icon(Icons.arrow_back_ios),
                 onPressed: () => Navigator.of(context).pop(),
               ),
-              title: Text(state.song?.title ?? ""),
+              title: TextButton(
+                onPressed: () {
+                  _navigateToSource(state.playlist!);
+                },
+                child: Column(
+                  children: [
+                    Text(
+                      "Playing from " +
+                          (state.playlist?.playlistType.header ?? ""),
+                    ),
+                    Text(state.playlist?.name ?? "",
+                        style: Theme.of(context).textTheme.titleLarge)
+                  ],
+                ),
+              ),
               actions: const [
                 Padding(
                   padding: EdgeInsets.only(right: 8.0),
@@ -60,20 +79,18 @@ class _PlaybackSheetState extends State<PlaybackSheet> {
             ),
             body: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: AspectRatio(
-                    aspectRatio: 1,
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
                     child: PlaybackCarousel(
                       state: state,
                       childCallback: (int itemIndex) => Padding(
                         padding:
                             const EdgeInsets.all(PlaybackSheet.EDGE_PADDING),
                         child: CachedNetworkImage(
-                          fit: BoxFit.fill,
-                          repeat: ImageRepeat.noRepeat,
+                          fit: BoxFit.fitHeight,
                           imageUrl:
-                              state.playlist?.songs?[itemIndex].album.coverUrl ??
+                              state.playlist?.songs[itemIndex].album.imageUrl ??
                                   "",
                         ),
                       ),
@@ -81,20 +98,18 @@ class _PlaybackSheetState extends State<PlaybackSheet> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(PlaybackSheet.EDGE_PADDING),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: PlaybackSheet.EDGE_PADDING),
                   child: Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(top: 4, bottom: 16),
+                        padding: const EdgeInsets.only(top: 4, bottom: 4),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             PlaybackMarquee(
-                              title: state.song?.title ?? "",
-                              authors: state.song?.authors
-                                      .map((a) => a.name)
-                                      .join(", ") ??
-                                  "",
+                              title: state.song?.name ?? "",
+                              authors: state.song?.authorString ?? "",
                             ),
                             Container(
                               width: 50,
@@ -145,4 +160,21 @@ class _PlaybackSheetState extends State<PlaybackSheet> {
   }
 
   void _onSharePressed() {}
+
+  void _navigateToSource(Playlist playlist) {
+    String route = "";
+
+    if (playlist.playlistType == PlaylistType.artistPlaylist) {
+      route = AUTHOR_VIEW_ROUTE + "/" + playlist.authors[0].id;
+    } else {
+      route = PLAYLIST_VIEW_ROUTE + "/" + playlist.id;
+    }
+
+    BuildContext? currentCtx = widget.currentNavigator.currentContext;
+    if (currentCtx != null &&
+        ModalRoute.of(currentCtx)?.settings.name != route) {
+      widget.currentNavigator.currentState!.pushNamedIfNotCurrent(route);
+      Navigator.of(context).pop();
+    }
+  }
 }

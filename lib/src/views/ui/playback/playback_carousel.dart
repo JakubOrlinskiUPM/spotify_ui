@@ -33,10 +33,8 @@ class _PlaybackCarouselState extends State<PlaybackCarousel> {
       initialPage: widget.state.songIndex,
     );
 
-    subscription = BlocProvider
-        .of<PlayerBloc>(context)
-        .stream
-        .listen((PlayerState state) {
+    subscription =
+        BlocProvider.of<PlayerBloc>(context).stream.listen((PlayerState state) {
       if (!_isBlocked) {
         if (state.songIndex != widget.state.songIndex) {
           pageController.animateToPage(
@@ -59,22 +57,31 @@ class _PlaybackCarouselState extends State<PlaybackCarousel> {
 
   @override
   Widget build(BuildContext context) {
-    return PageView.builder(
-      itemCount: widget.state.playlist?.songs?.length,
-      controller: pageController,
-      onPageChanged: (int pageNo) => _onPageChanged(context, pageNo),
-      itemBuilder: (BuildContext context, int itemIndex) {
-        return widget.childCallback(itemIndex);
+    return NotificationListener<ScrollNotification>(
+      onNotification: (ScrollNotification notification) {
+        if (notification.depth == 0 && notification is ScrollEndNotification) {
+          _onPageChanged(context, pageController.page?.ceil() ?? 0);
+        }
+        return false;
       },
+      child: PageView.builder(
+        itemCount: widget.state.playlist?.songs.length,
+        controller: pageController,
+        // onPageChanged: (int pageNo) => _onPageChanged(context, pageNo),
+        itemBuilder: (BuildContext context, int itemIndex) {
+          return widget.childCallback(itemIndex);
+        },
+      ),
     );
   }
 
   void _onPageChanged(BuildContext context, int pageNo) {
     if (widget.state.playlist != null) {
-      Song s = widget.state.playlist!.songs![pageNo];
-      lock();
-      BlocProvider.of<PlayerBloc>(context)
-          .add(PlayerSetSongEvent(song: s));
+      Song s = widget.state.playlist!.songs[pageNo];
+      if (widget.state.song != s) {
+        lock();
+        BlocProvider.of<PlayerBloc>(context).add(PlayerSetSongEvent(song: s));
+      }
     }
   }
 

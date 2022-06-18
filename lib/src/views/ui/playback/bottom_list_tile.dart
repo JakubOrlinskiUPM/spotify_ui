@@ -23,8 +23,11 @@ class _BottomListTileState extends State<BottomListTile> {
       children: [
         Expanded(
           flex: 1,
-          child: CachedNetworkImage(
-              height: 35, imageUrl: widget.state.song!.album.coverUrl),
+          child: SizedBox(
+            height: 35,
+            child: CachedNetworkImage(
+                imageUrl: widget.state.song!.album.imageUrl),
+          ),
         ),
         Expanded(
           flex: 4,
@@ -35,8 +38,10 @@ class _BottomListTileState extends State<BottomListTile> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 PlaybackMarquee(
-                  title: widget.state.playlist?.songs?[itemIndex].title ?? "",
-                  authors: widget.state.playlist?.songs?[itemIndex].authorString ?? "",
+                  title: widget.state.playlist?.songs[itemIndex].name ?? "",
+                  authors:
+                      widget.state.playlist?.songs[itemIndex].authorString ??
+                          "",
                   songTextStyle: Theme.of(context).textTheme.titleLarge!,
                   authorTextStyle: Theme.of(context).textTheme.caption!,
                 ),

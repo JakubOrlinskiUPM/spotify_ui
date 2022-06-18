@@ -8,7 +8,12 @@ import 'package:spotify_ui/src/views/ui/playback/playback_sheet.dart';
 import 'package:spotify_ui/src/business_logic/blocs/player_bloc.dart';
 
 class PlaybackBottomSheet extends StatelessWidget {
-  const PlaybackBottomSheet({Key? key}) : super(key: key);
+  const PlaybackBottomSheet({
+    Key? key,
+    required this.currentNavigator,
+  }) : super(key: key);
+
+  final GlobalKey<NavigatorState> currentNavigator;
 
   @override
   Widget build(BuildContext context) {
@@ -59,10 +64,13 @@ class PlaybackBottomSheet extends StatelessWidget {
   }
 
   void _onTap(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute<void>(
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
         builder: (BuildContext context) {
-          return const PlaybackSheet();
+          return PlaybackSheet(currentNavigator: currentNavigator);
         },
-        fullscreenDialog: true));
+        fullscreenDialog: true,
+      ),
+    );
   }
 }

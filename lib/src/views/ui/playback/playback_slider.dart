@@ -24,7 +24,7 @@ class _PlaybackSliderState extends State<PlaybackSlider> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       PlaybackSliderProvider psp = Provider.of<PlaybackSliderProvider>(context, listen: false);
       psp.addListener(() {
         if (mounted) {
