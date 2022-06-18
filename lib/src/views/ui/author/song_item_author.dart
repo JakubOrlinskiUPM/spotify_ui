@@ -33,12 +33,12 @@ class SongItemAuthor extends StatelessWidget {
                 child: Hero(
                   tag: song.heroString,
                   child: CachedNetworkImage(
-                    imageUrl: song.album.coverUrl,
+                    imageUrl: song.album.imageUrl,
                   ),
                 ),
               ),
               title: Text(
-                song.title,
+                song.name,
                 style: style,
               ),
               subtitle: Text(song.listenCountString),
