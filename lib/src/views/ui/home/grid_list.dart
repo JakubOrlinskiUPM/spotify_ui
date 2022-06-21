@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:spotify_ui/src/views/ui/components/album_list_item_small.dart';
+import 'package:spotify_ui/src/views/ui/home/album_list_item_small.dart';
 
 class GridList extends StatelessWidget {
   const GridList({Key? key, required this.name, required this.list})
@@ -32,7 +32,7 @@ class GridList extends StatelessWidget {
               crossAxisCount: 2,
             ),
             itemBuilder: (BuildContext context, int index) {
-              return AlbumListItemSmall(item: list[index]);
+              return AlbumListItemSmall(recentlyPlayed: list[index]);
             },
           ),
         ],

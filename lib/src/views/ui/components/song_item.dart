@@ -8,6 +8,7 @@ import 'package:spotify_ui/src/business_logic/models/song.dart';
 import 'package:spotify_ui/src/business_logic/blocs/player_bloc.dart';
 import 'package:spotify_ui/src/views/ui/components/custom_future_builder.dart';
 import 'package:spotify_ui/src/views/ui/components/menu_dialog.dart';
+import 'package:spotify_ui/src/views/ui/components/song_item_loading.dart';
 
 class SongItem extends StatelessWidget {
   const SongItem({Key? key, required this.songId, required this.playlist})
@@ -20,6 +21,7 @@ class SongItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomFutureBuilder<Song>(
       future: BlocProvider.of<DataBloc>(context).getSong(songId),
+      loading: SongItemLoading(),
       child: (Song song) => BlocBuilder<PlayerBloc, PlayerState>(
         builder: (context, state) {
           TextStyle style = TextStyle(

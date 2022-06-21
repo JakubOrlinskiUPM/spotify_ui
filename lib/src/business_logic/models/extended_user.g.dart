@@ -1,17 +1,16 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'user.dart';
+part of 'extended_user.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-User _$UserFromJson(Map<String, dynamic> json) => User(
+ExtendedUser _$ExtendedUserFromJson(Map<String, dynamic> json) => ExtendedUser(
       id: json['id'] as String,
-      name: json['name'] as String,
     );
 
-Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
+Map<String, dynamic> _$ExtendedUserToJson(ExtendedUser instance) =>
+    <String, dynamic>{
       'id': instance.id,
-      'name': instance.name,
     };

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spotify_ui/src/business_logic/blocs/player_bloc.dart';
+import 'package:spotify_ui/src/sign_in_guard.dart';
 
 import 'package:spotify_ui/src/views/ui/home/home.dart';
 import 'package:spotify_ui/src/views/ui/library/library.dart';
@@ -37,7 +38,7 @@ class _AppState extends State<App> {
       onWillPop: () async =>
           !await tabs[_currentIndex].navigatorKey.currentState!.maybePop(),
       child: Scaffold(
-        body: tabs[_currentIndex].navigator,
+        body: SignInGuard(child: tabs[_currentIndex].navigator),
         bottomSheet: PlaybackBottomSheet(
             currentNavigator: tabs[_currentIndex].navigatorKey),
         bottomNavigationBar: Container(

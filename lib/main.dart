@@ -1,4 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:bloc/bloc.dart';
@@ -10,7 +11,6 @@ import 'package:spotify_ui/src/app.dart';
 import 'package:spotify_ui/src/business_logic/blocs/data_bloc.dart';
 import 'package:spotify_ui/src/business_logic/blocs/player_bloc.dart';
 import 'package:spotify_ui/src/business_logic/providers/playback_slider_provider.dart';
-import 'package:spotify_ui/src/views/ui/components/custom_future_builder.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,8 +28,6 @@ void main() async {
         ),
         BlocProvider<DataBloc>(
           create: (context) => dataBloc
-            ..add(DataFetchRecentlyPlayed())
-            ..add(DataFetch()),
         )
       ],
       child: MultiProvider(

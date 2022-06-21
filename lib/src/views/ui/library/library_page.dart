@@ -81,7 +81,7 @@ class _LibraryPageState extends State<LibraryPage> {
                     ),
             ],
           ),
-          Wrap(children: _buildChips(context)),
+          _buildChips(context),
           TextButton(
             onPressed: _showSortBy,
             child: Row(
@@ -136,28 +136,34 @@ class _LibraryPageState extends State<LibraryPage> {
     });
   }
 
-  List<Widget> _buildChips(BuildContext context) {
-    return PlaylistType.values.map((type) {
-      return Padding(
-        padding: const EdgeInsets.all(4.0),
-        child: FilterChip(
-          selectedColor: Colors.green,
-          label: Text(type.string),
-          selected: _chosenFilters.contains(type),
-          onSelected: (bool value) {
-            setState(() {
-              if (value) {
-                _chosenFilters.add(type);
-              } else {
-                _chosenFilters.removeWhere((PlaylistType pt) {
-                  return pt == type;
+  Widget _buildChips(BuildContext context) {
+    return SizedBox(
+      height: 50,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: PlaylistType.values.map((type) {
+          return Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: FilterChip(
+              selectedColor: Colors.green,
+              label: Text(type.string),
+              selected: _chosenFilters.contains(type),
+              onSelected: (bool value) {
+                setState(() {
+                  if (value) {
+                    _chosenFilters.add(type);
+                  } else {
+                    _chosenFilters.removeWhere((PlaylistType pt) {
+                      return pt == type;
+                    });
+                  }
                 });
-              }
-            });
-          },
-        ),
-      );
-    }).toList();
+              },
+            ),
+          );
+        }).toList(),
+      ),
+    );
   }
 
   void _showSortBy() async {

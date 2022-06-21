@@ -2,68 +2,15 @@ import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:spotify_ui/src/business_logic/models/author.dart';
 import 'package:spotify_ui/src/business_logic/models/song.dart';
+import 'package:spotify_ui/src/business_logic/models/viewable.dart';
 
 import 'author_stub.dart';
 
 part 'playlist.g.dart';
 
-enum PlaylistType { album, userPlaylist, single, podcast, artistPlaylist }
-
-extension PlaylistTypeStringExtension on PlaylistType {
-  String get string {
-    switch (this) {
-      case PlaylistType.album:
-        return "Album";
-      case PlaylistType.userPlaylist:
-        return "Playlist";
-      case PlaylistType.single:
-        return "EP";
-      case PlaylistType.podcast:
-        return "Podcast";
-      case PlaylistType.artistPlaylist:
-        return "Artist Playlist";
-      default:
-        return "";
-    }
-  }
-
-  String get header {
-    switch (this) {
-      case PlaylistType.album:
-        return "album";
-      case PlaylistType.userPlaylist:
-        return "playlist";
-      case PlaylistType.single:
-        return "EP";
-      case PlaylistType.podcast:
-        return "podcast";
-      case PlaylistType.artistPlaylist:
-        return "artist";
-      default:
-        return "";
-    }
-  }
-
-  int get integer {
-    switch (this) {
-      case PlaylistType.album:
-        return 0;
-      case PlaylistType.userPlaylist:
-        return 1;
-      case PlaylistType.single:
-        return 2;
-      case PlaylistType.podcast:
-        return 3;
-      case PlaylistType.artistPlaylist:
-        return 4;
-      default:
-        return -1;
-    }
-  }
-}
 
 @JsonSerializable(explicitToJson: true)
-class Playlist extends Equatable {
+class Playlist extends Equatable implements Viewable {
   Playlist({
     required this.id,
     required this.name,
@@ -140,5 +87,62 @@ class Playlist extends Equatable {
         authors: [],
         colorHex: 0,
         releaseYear: 0);
+  }
+}
+
+
+
+enum PlaylistType { album, userPlaylist, single, podcast, artistPlaylist }
+
+extension PlaylistTypeStringExtension on PlaylistType {
+  String get string {
+    switch (this) {
+      case PlaylistType.album:
+        return "Album";
+      case PlaylistType.userPlaylist:
+        return "Playlist";
+      case PlaylistType.single:
+        return "EP";
+      case PlaylistType.podcast:
+        return "Podcast";
+      case PlaylistType.artistPlaylist:
+        return "Artist Playlist";
+      default:
+        return "";
+    }
+  }
+
+  String get header {
+    switch (this) {
+      case PlaylistType.album:
+        return "album";
+      case PlaylistType.userPlaylist:
+        return "playlist";
+      case PlaylistType.single:
+        return "EP";
+      case PlaylistType.podcast:
+        return "podcast";
+      case PlaylistType.artistPlaylist:
+        return "artist";
+      default:
+        return "";
+    }
+  }
+
+  int get integer {
+    switch (this) {
+      case PlaylistType.album:
+        return 0;
+      case PlaylistType.userPlaylist:
+        return 1;
+      case PlaylistType.single:
+        return 2;
+      case PlaylistType.podcast:
+        return 3;
+      case PlaylistType.artistPlaylist:
+        return 4;
+      default:
+        return -1;
+    }
   }
 }

@@ -1,10 +1,11 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:spotify_ui/src/business_logic/models/viewable.dart';
 
 part 'author.g.dart';
 
 @JsonSerializable()
-class Author extends Equatable {
+class Author extends Equatable implements Viewable {
   const Author({
     required this.id,
     required this.name,
