@@ -44,6 +44,7 @@ Author mooseDawa = const Author(
   name: 'Moose Dawa',
   albums: [
     "ZfnXoGPtUNVy3fYhmpJV",
+    "3Wi8vWt5oPZf0TguOeZv",
   ],
   popularSongIds: ["Vv0kUzqiPVAFuF7sLDBE"],
 );

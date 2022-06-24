@@ -57,14 +57,14 @@ Song alleycatJazz = const Song(
     colorHex: 4293701725,
     id: 'ZfnXoGPtUNVy3fYhmpJV',
     imageUrl:
-    'https://firebasestorage.googleapis.com/v0/b/spotifyui-bfaba.appspot.com/o/images%2Fmoose-dowa-the-swap.jpeg?alt=media&token=78967e10-62f9-4557-890e-6f937489f66f',
+    'https://firebasestorage.googleapis.com/v0/b/spotifyui-bfaba.appspot.com/o/images%2Fmoose-dawa-the-swap.jpeg?alt=media&token=24f0372e-2b39-48c3-b930-422a49d18d61',
   ),
   authors: [
     AuthorStub(
       id: 'j2ipLk5IQOshIGo805ZA',
       name: 'Moose Dowa',
       imageUrl:
-      'https://firebasestorage.googleapis.com/v0/b/spotifyui-bfaba.appspot.com/o/images%2Fmoose-dowa.jpeg?alt=media&token=0826467c-7c6b-4aed-a6b1-fb136173c68e',
+      'https://firebasestorage.googleapis.com/v0/b/spotifyui-bfaba.appspot.com/o/images%2Fmoose-dawa.jpeg?alt=media&token=313373cc-7015-46da-8073-d88aeec579f2',
     ),
   ],
   storagePath: '/songs/Moose Dowa-Alleycat Jazz.mp3',
@@ -121,10 +121,83 @@ Song oneStepAhead = const Song(
 );
 
 
+Song noLies = const Song(
+  id: "ozlOlGFTPOIXXiJ99M3S",
+  name: "No lies",
+  album: PlaylistStub(
+    colorHex: 4282415730,
+    id: '3Wi8vWt5oPZf0TguOeZv',
+    imageUrl:
+    'https://firebasestorage.googleapis.com/v0/b/spotifyui-bfaba.appspot.com/o/images%2F3Wi8vWt5oPZf0TguOeZv.jpeg?alt=media&token=3fab5195-e804-47ec-96af-12be894cfe9a',
+  ),
+  authors: [
+    AuthorStub(
+      id: "j2ipLk5IQOshIGo805ZA",
+      name: "Moose Dawa",
+      imageUrl:
+      "https://firebasestorage.googleapis.com/v0/b/spotifyui-bfaba.appspot.com/o/images%2Fmoose-dowa.jpeg?alt=media&token=0826467c-7c6b-4aed-a6b1-fb136173c68e",
+    ),
+  ],
+  storagePath: '/songs/ozlOlGFTPOIXXiJ99M3S.mp3',
+  storageUrl:
+  'https://firebasestorage.googleapis.com/v0/b/spotifyui-bfaba.appspot.com/o/songs%2FozlOlGFTPOIXXiJ99M3S.mp3?alt=media&token=d1f0e16d-4862-44ad-b16e-7d5d59435e73',
+  listenCount: 123331,
+);
+
+Song blauw = const Song(
+  id: "3U77Vw5ABZ6m4lOLm8L5",
+  name: "Blauw",
+  album: PlaylistStub(
+    colorHex: 4282415730,
+    id: '3Wi8vWt5oPZf0TguOeZv',
+    imageUrl:
+    'https://firebasestorage.googleapis.com/v0/b/spotifyui-bfaba.appspot.com/o/images%2F3Wi8vWt5oPZf0TguOeZv.jpeg?alt=media&token=3fab5195-e804-47ec-96af-12be894cfe9a',
+  ),
+  authors: [
+    AuthorStub(
+      id: "j2ipLk5IQOshIGo805ZA",
+      name: "Moose Dawa",
+      imageUrl:
+      "https://firebasestorage.googleapis.com/v0/b/spotifyui-bfaba.appspot.com/o/images%2Fmoose-dowa.jpeg?alt=media&token=0826467c-7c6b-4aed-a6b1-fb136173c68e",
+    ),
+  ],
+  storagePath: '/songs/3U77Vw5ABZ6m4lOLm8L5.mp3',
+  storageUrl:
+  'https://firebasestorage.googleapis.com/v0/b/spotifyui-bfaba.appspot.com/o/songs%2F3U77Vw5ABZ6m4lOLm8L5.mp3?alt=media&token=71616086-6b13-41d7-b2dc-c63f6dc87bc3',
+  listenCount: 123332331,
+);
+
+Song chill = const Song(
+  id: "jJhi4yGbO8XrtA3SW9t0",
+  name: "Chill",
+  album: PlaylistStub(
+    colorHex: 4282415730,
+    id: '3Wi8vWt5oPZf0TguOeZv',
+    imageUrl:
+    'https://firebasestorage.googleapis.com/v0/b/spotifyui-bfaba.appspot.com/o/images%2F3Wi8vWt5oPZf0TguOeZv.jpeg?alt=media&token=3fab5195-e804-47ec-96af-12be894cfe9a',
+  ),
+  authors: [
+    AuthorStub(
+      id: "j2ipLk5IQOshIGo805ZA",
+      name: "Moose Dawa",
+      imageUrl:
+      "https://firebasestorage.googleapis.com/v0/b/spotifyui-bfaba.appspot.com/o/images%2Fmoose-dawa.jpeg?alt=media&token=313373cc-7015-46da-8073-d88aeec579f2",
+    ),
+  ],
+  storagePath: '/songs/jJhi4yGbO8XrtA3SW9t0.mp3',
+  storageUrl:
+  'https://firebasestorage.googleapis.com/v0/b/spotifyui-bfaba.appspot.com/o/songs%2FjJhi4yGbO8XrtA3SW9t0.mp3?alt=media&token=f614e905-cf16-4300-976f-fdc432fe0be6',
+  listenCount: 1112,
+);
+
+
 List<Song> songs = [
   reign,
   youAndI,
   alleycatJazz,
   openingNight,
-  oneStepAhead
+  oneStepAhead,
+  noLies,
+  blauw,
+  chill,
 ];

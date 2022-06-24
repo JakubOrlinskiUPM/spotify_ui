@@ -1,5 +1,6 @@
 import 'package:spotify_ui/src/business_logic/models/author_stub.dart';
 import 'package:spotify_ui/src/business_logic/models/playlist.dart';
+import 'package:spotify_ui/src/business_logic/models/playlist_type.dart';
 
 
 Playlist myPlaylist = Playlist(

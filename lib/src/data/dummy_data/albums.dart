@@ -1,5 +1,6 @@
 import 'package:spotify_ui/src/business_logic/models/author_stub.dart';
 import 'package:spotify_ui/src/business_logic/models/playlist.dart';
+import 'package:spotify_ui/src/business_logic/models/playlist_type.dart';
 
 Playlist yachtWorld = Playlist(
   id: 'Pwsj8yWWxLMSiy0bvXiW',
@@ -27,8 +28,8 @@ Playlist yachtWorld = Playlist(
 Playlist theSwap = Playlist(
   id: 'ZfnXoGPtUNVy3fYhmpJV',
   imageUrl:
-      'https://firebasestorage.googleapis.com/v0/b/spotifyui-bfaba.appspot.com/o/images%2Fmoose-dowa-the-swap.jpeg?alt=media&token=78967e10-62f9-4557-890e-6f937489f66f',
-  imagePath: '/images/moose-dowa-the-swap.jpeg',
+      'https://firebasestorage.googleapis.com/v0/b/spotifyui-bfaba.appspot.com/o/images%2Fmoose-dawa-the-swap.jpeg?alt=media&token=24f0372e-2b39-48c3-b930-422a49d18d61',
+  imagePath: '/images/moose-dawa-the-swap.jpeg',
   name: 'The Swap',
   releaseYear: 2020,
   playlistType: PlaylistType.album,
@@ -40,7 +41,7 @@ Playlist theSwap = Playlist(
       id: "j2ipLk5IQOshIGo805ZA",
       name: "Moose Dawa",
       imageUrl:
-          "https://firebasestorage.googleapis.com/v0/b/spotifyui-bfaba.appspot.com/o/images%2Fmoose-dowa.jpeg?alt=media&token=0826467c-7c6b-4aed-a6b1-fb136173c68e",
+          "https://firebasestorage.googleapis.com/v0/b/spotifyui-bfaba.appspot.com/o/images%2Fmoose-dawa.jpeg?alt=media&token=313373cc-7015-46da-8073-d88aeec579f2",
     ),
   ],
   colorHex: 4293701725,
@@ -112,10 +113,35 @@ Playlist intimateFunk = Playlist(
   colorHex: 4290130731,
 );
 
+Playlist dreamsFromTheShore = Playlist(
+  id: '3Wi8vWt5oPZf0TguOeZv',
+  imageUrl:
+  'https://firebasestorage.googleapis.com/v0/b/spotifyui-bfaba.appspot.com/o/images%2F3Wi8vWt5oPZf0TguOeZv.jpeg?alt=media&token=3fab5195-e804-47ec-96af-12be894cfe9a',
+  imagePath: '/images/3Wi8vWt5oPZf0TguOeZv.jpeg',
+  name: 'Dreams from the Shore',
+  releaseYear: 2019,
+  playlistType: PlaylistType.album,
+  songIds: [
+    "3U77Vw5ABZ6m4lOLm8L5",
+    "ozlOlGFTPOIXXiJ99M3S",
+    "jJhi4yGbO8XrtA3SW9t0",
+  ],
+  authors: const [
+    AuthorStub(
+      id: "j2ipLk5IQOshIGo805ZA",
+      name: "Moose Dawa",
+      imageUrl:
+      "https://firebasestorage.googleapis.com/v0/b/spotifyui-bfaba.appspot.com/o/images%2Fmoose-dawa.jpeg?alt=media&token=313373cc-7015-46da-8073-d88aeec579f2",
+    ),
+  ],
+  colorHex: 4282415730,
+);
+
 List<Playlist> albums = [
   yachtWorld,
   reign,
   pureLuxury,
   theSwap,
-  intimateFunk
+  intimateFunk,
+  dreamsFromTheShore
 ];
