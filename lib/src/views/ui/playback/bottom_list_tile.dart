@@ -23,29 +23,49 @@ class _BottomListTileState extends State<BottomListTile> {
       children: [
         Expanded(
           flex: 1,
-          child: SizedBox(
-            height: 35,
-            child: CachedNetworkImage(
-                imageUrl: widget.state.song!.album.imageUrl),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 4.0),
+            child: SizedBox(
+              width: 45,
+              height: 50,
+              child: ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+                child: CachedNetworkImage(
+                  imageUrl: widget.state.song!.album.imageUrl,
+                  fit: BoxFit.fill,
+                ),
+              ),
+            ),
           ),
         ),
         Expanded(
           flex: 4,
-          child: PlaybackCarousel(
-            state: widget.state,
-            childCallback: (int itemIndex) => Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                PlaybackMarquee(
-                  title: widget.state.playlist?.songs[itemIndex].name ?? "",
-                  authors:
-                      widget.state.playlist?.songs[itemIndex].authorString ??
-                          "",
-                  songTextStyle: Theme.of(context).textTheme.titleLarge!,
-                  authorTextStyle: Theme.of(context).textTheme.caption!,
-                ),
-              ],
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: PlaybackCarousel(
+              state: widget.state,
+              childCallback: (int itemIndex) {
+                print("childCallback " + itemIndex.toString());
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if ((widget.state.playlist?.songs.length ?? 0) >
+                        itemIndex) ...[
+                      PlaybackMarquee(
+                          title: widget.state.playlist?.songs[itemIndex].name ??
+                              "",
+                          authors: widget.state.playlist?.songs[itemIndex]
+                                  .authorString ??
+                              "",
+                          songTextStyle:
+                              Theme.of(context).textTheme.titleLarge!,
+                          authorTextStyle:
+                              Theme.of(context).textTheme.caption!),
+                    ]
+                  ],
+                );
+              },
             ),
           ),
         ),

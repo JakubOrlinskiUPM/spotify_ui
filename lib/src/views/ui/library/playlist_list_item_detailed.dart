@@ -1,19 +1,26 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spotify_ui/src/business_logic/blocs/data_bloc.dart';
 import 'package:spotify_ui/src/business_logic/models/playlist.dart';
+import 'package:spotify_ui/src/business_logic/models/user_playlist.dart';
+import 'package:spotify_ui/src/views/ui/components/custom_future_builder.dart';
 import 'package:spotify_ui/src/views/ui/components/middle_dot.dart';
 import 'package:spotify_ui/src/views/ui/routing.dart';
+import 'package:spotify_ui/src/business_logic/models/playlist_type.dart';
 
-class AlbumListItemDetailed extends StatelessWidget {
-  const AlbumListItemDetailed({Key? key, required this.item}) : super(key: key);
+class PlaylistListItemDetailed extends StatelessWidget {
+  const PlaylistListItemDetailed({Key? key, required this.item}) : super(key: key);
 
   static double height = 60;
 
-  final Playlist item;
+  final UserPlaylist item;
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
+    return CustomFutureBuilder<Playlist>(
+      future: BlocProvider.of<DataBloc>(context).getPlaylistById(item.id),
+      child: (Playlist playlist) => TextButton(
       style: TextButton.styleFrom(
         padding: EdgeInsets.zero,
       ),
@@ -26,17 +33,17 @@ class AlbumListItemDetailed extends StatelessWidget {
           leading: SizedBox(
             width: height,
             height: height,
-            child: CachedNetworkImage(imageUrl: item.imageUrl, fit: BoxFit.fill,),
+            child: CachedNetworkImage(imageUrl: playlist.imageUrl, fit: BoxFit.fill,),
           ),
-          title: Text(item.name),
+          title: Text(playlist.name),
           subtitle: Row(
             children: [
-              Text(item.playlistType.string),
+              Text(playlist.playlistType.string),
               const MiddleDot(),
-              Text(item.authorString),
+              Text(playlist.authorString),
             ],
           ),
-        ),
+        ),),
       ),
     );
   }

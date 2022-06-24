@@ -22,47 +22,47 @@ class SongItem extends StatelessWidget {
     return CustomFutureBuilder<Song>(
       future: BlocProvider.of<DataBloc>(context).getSong(songId),
       loading: SongItemLoading(),
-      child: (Song song) => BlocBuilder<PlayerBloc, PlayerState>(
-        builder: (context, state) {
-          TextStyle style = TextStyle(
-            color: state.song?.id == song.id ? Colors.green : null,
-          );
+      child: (Song song) {
+        playlist.sortSongs(song);
+        return BlocBuilder<PlayerBloc, PlayerState>(
+          builder: (context, state) {
+            TextStyle style = TextStyle(
+              color: state.song?.id == song.id ? Colors.green : null,
+            );
 
-          return TextButton(
-            onPressed: () => _onSongPressed(context, song),
-            child: ListTile(
-              contentPadding: EdgeInsets.only(left: 8.0),
-              leading: SizedBox(
-                width: 50,
-                height: 50,
-                child: Hero(
-                  tag: song.heroString,
+            return TextButton(
+              onPressed: () => _onSongPressed(context, song),
+              child: ListTile(
+                contentPadding: EdgeInsets.only(left: 8.0),
+                leading: SizedBox(
+                  width: 50,
+                  height: 50,
                   child: CachedNetworkImage(
                     imageUrl: song.album.imageUrl,
                   ),
                 ),
+                title: Text(
+                  song.name,
+                  style: style,
+                ),
+                subtitle: Text(song.authorString),
+                trailing: IconButton(
+                  onPressed: () => _onMenuPressed(context, song),
+                  icon: const Icon(Icons.more_vert),
+                ),
               ),
-              title: Text(
-                song.name,
-                style: style,
-              ),
-              subtitle: Text(song.authorString),
-              trailing: IconButton(
-                onPressed: () => _onMenuPressed(context, song),
-                icon: const Icon(Icons.more_vert),
-              ),
-            ),
-          );
-        },
-      ),
+            );
+          },
+        );
+      },
     );
   }
 
   void _onSongPressed(BuildContext context, Song song) {
-    context
-        .read<PlayerBloc>()
-        .add(PlayerSetSongEvent(song: song, playlist: playlist));
-    context.read<PlayerBloc>().add(PlayerStartedEvent());
+    PlayerBloc bloc = context.read<PlayerBloc>();
+    bloc.add(PlayerSetSongEvent(song: song, playlist: playlist));
+    bloc.add(PlayerStartedEvent());
+    context.read<DataBloc>().addRecentlyPlayed(song.id, playlist.id, null);
   }
 
   _onMenuPressed(BuildContext context, Song song) async {

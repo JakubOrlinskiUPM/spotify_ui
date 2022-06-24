@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:spotify_ui/src/business_logic/blocs/data_bloc.dart';
 
@@ -19,6 +20,7 @@ class _SignInGuardState extends State<SignInGuard> {
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user == null) {
         print('User is currently signed out!');
+        BlocProvider.of<DataBloc>(context).add(DataSetUser(user: null));
       } else {
         print('User is signed in!');
         BlocProvider.of<DataBloc>(context).add(DataSetUser(user: user));
@@ -32,22 +34,38 @@ class _SignInGuardState extends State<SignInGuard> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<DataBloc, DataState>(builder: (context, state) {
-      if (state.user == null) {
-        return Column(
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                signInWithGoogle(false);
-              },
-              child: Text("Sign in with Google"),
-            )
-          ],
-        );
-      } else {
-        return widget.child;
-      }
-    });
+    return Scaffold(
+      body: BlocBuilder<DataBloc, DataState>(builder: (context, state) {
+        if (state.user == null) {
+          return SafeArea(
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text("Welcome to"),
+                  Text(
+                    "SpotifyUI",
+                    style: Theme.of(context).textTheme.headlineLarge,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: SignInButton(
+                      Buttons.Google,
+                      text: "Sign in with Google",
+                      onPressed: () {
+                        signInWithGoogle(false);
+                      },
+                    ),
+                  )
+                ],
+              ),
+            ),
+          );
+        } else {
+          return widget.child;
+        }
+      }),
+    );
   }
 
   Future<UserCredential?> signInWithGoogle(bool silent) async {

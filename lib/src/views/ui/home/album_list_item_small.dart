@@ -6,10 +6,12 @@ import 'package:spotify_ui/src/business_logic/models/playlist.dart';
 import 'package:spotify_ui/src/business_logic/models/recently_played.dart';
 import 'package:spotify_ui/src/business_logic/models/viewable.dart';
 import 'package:spotify_ui/src/views/ui/components/custom_future_builder.dart';
+import 'package:spotify_ui/src/views/ui/home/album_item_loading.dart';
 import 'package:spotify_ui/src/views/ui/routing.dart';
+import 'package:uuid/uuid.dart';
 
 class AlbumListItemSmall extends StatelessWidget {
-  const AlbumListItemSmall({Key? key, required this.recentlyPlayed})
+  AlbumListItemSmall({Key? key, required this.recentlyPlayed})
       : super(key: key);
 
   static double height = 70;
@@ -26,7 +28,7 @@ class AlbumListItemSmall extends StatelessWidget {
     return CustomFutureBuilder<Viewable>(
       future: BlocProvider.of<DataBloc>(context)
           .getRecentlyPlayedItem(recentlyPlayed),
-      // loading: AlbumItemLoading(),
+      loading: AlbumItemLoading(),
       child: (Viewable item) => TextButton(
         style: TextButton.styleFrom(
           padding: EdgeInsets.zero,
@@ -44,11 +46,8 @@ class AlbumListItemSmall extends StatelessWidget {
                 SizedBox(
                   width: height,
                   height: height,
-                  child: Hero(
-                    tag: item.heroString,
-                    child: CachedNetworkImage(
-                        imageUrl: item.imageUrl, fit: BoxFit.fill),
-                  ),
+                  child: CachedNetworkImage(
+                      imageUrl: item.imageUrl, fit: BoxFit.fill),
                 ),
                 SizedBox(
                   width: itemWidth,

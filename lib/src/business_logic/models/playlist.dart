@@ -1,13 +1,13 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:spotify_ui/src/business_logic/models/author.dart';
+import 'package:spotify_ui/src/business_logic/models/playlist_type.dart';
 import 'package:spotify_ui/src/business_logic/models/song.dart';
 import 'package:spotify_ui/src/business_logic/models/viewable.dart';
 
 import 'author_stub.dart';
 
 part 'playlist.g.dart';
-
 
 @JsonSerializable(explicitToJson: true)
 class Playlist extends Equatable implements Viewable {
@@ -46,13 +46,39 @@ class Playlist extends Equatable implements Viewable {
   String get heroString =>
       '''${id.toString()}-${playlistType.toString()}-hero''';
 
+  void sortSongs([Song? song]) {
+    if (song != null && !songs.contains(song)) {
+      songs.add(song);
+    }
+    songs.sort(
+        (Song s1, Song s2) => songIds.indexOf(s1.id) - songIds.indexOf(s2.id));
+  }
+
   @override
-  List<Object?> get props => [id, name, playlistType];
+  List<Object?> get props => [id, name, playlistType, songs];
 
   factory Playlist.fromJson(Map<String, dynamic> json) =>
       _$PlaylistFromJson(json);
 
   Map<String, dynamic> toJson() => _$PlaylistToJson(this);
+
+  static Playlist authorPlaylist(Author author, List<Song> songs) {
+    return Playlist(
+        id: "",
+        name: author.name,
+        imageUrl: "",
+        imagePath: "",
+        playlistType: PlaylistType.artistPlaylist,
+        songIds: [],
+        songs: songs,
+        authors: [],
+        colorHex: 0,
+        releaseYear: 0);
+  }
+
+  static int getInt(PlaylistType pt) {
+    return pt.integer;
+  }
 
   static PlaylistType getType(int type) {
     switch (type) {
@@ -68,81 +94,6 @@ class Playlist extends Equatable implements Viewable {
         return PlaylistType.artistPlaylist;
       default:
         return PlaylistType.userPlaylist;
-    }
-  }
-
-  static int getInt(PlaylistType pt) {
-    return pt.integer;
-  }
-
-  static Playlist authorPlaylist(Author author, List<Song> songs) {
-    return Playlist(
-        id: "",
-        name: author.name,
-        imageUrl: "",
-        imagePath: "",
-        playlistType: PlaylistType.artistPlaylist,
-        songIds: [],
-        songs: songs,
-        authors: [],
-        colorHex: 0,
-        releaseYear: 0);
-  }
-}
-
-
-
-enum PlaylistType { album, userPlaylist, single, podcast, artistPlaylist }
-
-extension PlaylistTypeStringExtension on PlaylistType {
-  String get string {
-    switch (this) {
-      case PlaylistType.album:
-        return "Album";
-      case PlaylistType.userPlaylist:
-        return "Playlist";
-      case PlaylistType.single:
-        return "EP";
-      case PlaylistType.podcast:
-        return "Podcast";
-      case PlaylistType.artistPlaylist:
-        return "Artist Playlist";
-      default:
-        return "";
-    }
-  }
-
-  String get header {
-    switch (this) {
-      case PlaylistType.album:
-        return "album";
-      case PlaylistType.userPlaylist:
-        return "playlist";
-      case PlaylistType.single:
-        return "EP";
-      case PlaylistType.podcast:
-        return "podcast";
-      case PlaylistType.artistPlaylist:
-        return "artist";
-      default:
-        return "";
-    }
-  }
-
-  int get integer {
-    switch (this) {
-      case PlaylistType.album:
-        return 0;
-      case PlaylistType.userPlaylist:
-        return 1;
-      case PlaylistType.single:
-        return 2;
-      case PlaylistType.podcast:
-        return 3;
-      case PlaylistType.artistPlaylist:
-        return 4;
-      default:
-        return -1;
     }
   }
 }

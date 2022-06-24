@@ -8,10 +8,12 @@ abstract class PlayerEvent extends Equatable {
 class PlayerSetSongEvent extends PlayerEvent {
   final Song song;
   final Playlist? playlist;
+  final bool play;
 
   PlayerSetSongEvent({
     required this.song,
-    this.playlist
+    this.playlist,
+    this.play = true
   });
 }
 

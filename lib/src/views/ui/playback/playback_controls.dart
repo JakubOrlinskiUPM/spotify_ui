@@ -18,13 +18,13 @@ class PlaybackControls extends StatelessWidget {
         IconButton(
           iconSize: PlaybackSheet.ICON_SIZE,
           icon: const Icon(Icons.skip_previous),
-          onPressed: _onBackPressed,
+          onPressed: () {_onBackPressed(context);},
         ),
         _buildPlay(context, state),
         IconButton(
           iconSize: PlaybackSheet.ICON_SIZE,
           icon: const Icon(Icons.skip_next),
-          onPressed: _onForwardPressed,
+          onPressed: () {_onForwardPressed(context);},
         ),
         _buildRepeat(state),
       ],
@@ -115,9 +115,13 @@ class PlaybackControls extends StatelessWidget {
 
   void _onShufflePressed() {}
 
-  void _onBackPressed() {}
+  void _onBackPressed(BuildContext context) {
+    context.read<PlayerBloc>().add(PlayerBackwardEvent());
+  }
 
-  void _onForwardPressed() {}
+  void _onForwardPressed(BuildContext context) {
+    context.read<PlayerBloc>().add(PlayerForwardEvent());
+  }
 
   void _onRepeatPressed() {}
 }

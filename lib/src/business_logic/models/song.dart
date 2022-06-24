@@ -44,4 +44,9 @@ class Song extends Equatable {
   factory Song.fromJson(Map<String, dynamic> json) => _$SongFromJson(json);
 
   Map<String, dynamic> toJson() => _$SongToJson(this);
+
+  @override
+  String toString() {
+    return """Song: ${id}, ${name}""";
+  }
 }

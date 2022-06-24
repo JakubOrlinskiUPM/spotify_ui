@@ -12,6 +12,7 @@ import 'package:spotify_ui/src/views/ui/playback/playback_controls.dart';
 import 'package:spotify_ui/src/views/ui/playback/playback_marquee.dart';
 import 'package:spotify_ui/src/views/ui/playback/playback_slider.dart';
 import 'package:spotify_ui/src/views/ui/routing.dart';
+import 'package:spotify_ui/src/business_logic/models/playlist_type.dart';
 
 class PlaybackSheet extends StatefulWidget {
   const PlaybackSheet({Key? key, required this.currentNavigator})

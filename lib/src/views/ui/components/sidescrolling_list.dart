@@ -21,9 +21,13 @@ class SidescrollingList extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 12),
             child: Text(name, style: Theme.of(context).textTheme.headline5),
           ),
-          SizedBox(
-            height: 150,
+          ConstrainedBox(
+            constraints: const BoxConstraints(
+              minHeight: 150,
+              maxHeight: 200,
+            ),
             child: ListView.separated(
+              shrinkWrap: true,
               scrollDirection: Axis.horizontal,
               itemCount: list.length,
               itemBuilder: (context, index) =>

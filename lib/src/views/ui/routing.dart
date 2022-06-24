@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:spotify_ui/src/views/ui/author/author_view.dart';
 import 'package:spotify_ui/src/views/ui/playlist/playlist_view.dart';
+import 'package:spotify_ui/src/views/ui/settings/settings_view.dart';
 
 const String PLAYLIST_VIEW_ROUTE = "playlistView";
 const String AUTHOR_VIEW_ROUTE = "authorView";
+const String SETTINGS_ROUTE = "settingsView";
 
 MaterialPageRoute? checkGeneralRoutes(route) {
   if (route.name.toString().startsWith(PLAYLIST_VIEW_ROUTE)) {
@@ -26,6 +28,13 @@ MaterialPageRoute? checkGeneralRoutes(route) {
         },
       );
     }
+  } else if (route.name.toString().startsWith(SETTINGS_ROUTE)) {
+    return MaterialPageRoute(
+      settings: route,
+      builder: (context) {
+        return SettingsView();
+      },
+    );
   }
 }
 

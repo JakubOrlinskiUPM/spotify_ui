@@ -13,8 +13,7 @@ class ExtendedUser extends Equatable {
   final User? user;
   
   @override
-  List<Object?> get props => [id];
-
+  List<Object?> get props => [id, user];
 
   factory ExtendedUser.fromJson(Map<String, dynamic> json) => _$ExtendedUserFromJson(json);
 

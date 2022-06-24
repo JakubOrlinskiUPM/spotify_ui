@@ -38,7 +38,7 @@ class _AppState extends State<App> {
       onWillPop: () async =>
           !await tabs[_currentIndex].navigatorKey.currentState!.maybePop(),
       child: Scaffold(
-        body: SignInGuard(child: tabs[_currentIndex].navigator),
+        body: tabs[_currentIndex].navigator,
         bottomSheet: PlaybackBottomSheet(
             currentNavigator: tabs[_currentIndex].navigatorKey),
         bottomNavigationBar: Container(

@@ -12,6 +12,7 @@ import 'package:spotify_ui/src/views/ui/components/fade_header.dart';
 import 'package:spotify_ui/src/views/ui/components/middle_dot.dart';
 import 'package:spotify_ui/src/views/ui/components/song_item.dart';
 import 'package:spotify_ui/src/views/ui/playlist/author_list.dart';
+import 'package:spotify_ui/src/business_logic/models/playlist_type.dart';
 
 class PlaylistView extends StatefulWidget {
   const PlaylistView({Key? key, required this.id}) : super(key: key);

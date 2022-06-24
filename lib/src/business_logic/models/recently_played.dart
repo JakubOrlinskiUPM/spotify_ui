@@ -7,7 +7,7 @@ part 'recently_played.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class RecentlyPlayed extends Equatable {
-  const RecentlyPlayed({this.songId, this.playlistId, this.artistId, required this.timestamp});
+  const RecentlyPlayed({this.songId, this.playlistId, this.artistId, this.timestamp});
 
   @JsonKey(name: "song_id")
   final String? songId;
@@ -15,8 +15,8 @@ class RecentlyPlayed extends Equatable {
   final String? playlistId;
   @JsonKey(name: "artist_id")
   final String? artistId;
-  @JsonKey(fromJson: timestampConversion)
-  final DateTime timestamp;
+  @JsonKey(fromJson: timestampFromJson, toJson: timestampToJson)
+  final DateTime? timestamp;
 
   @override
   List<Object?> get props => [songId, playlistId, artistId, ];
@@ -25,8 +25,11 @@ class RecentlyPlayed extends Equatable {
 
   Map<String, dynamic> toJson() => _$RecentlyPlayedToJson(this);
 
-  static DateTime timestampConversion(Timestamp ts) {
-    return ts.toDate();
+  static DateTime? timestampFromJson(int? time) {
+    return time != null ? DateTime.fromMillisecondsSinceEpoch(time) : null;
+  }
+  static int? timestampToJson(DateTime? dt) {
+    return dt?.millisecondsSinceEpoch;
   }
 }
 

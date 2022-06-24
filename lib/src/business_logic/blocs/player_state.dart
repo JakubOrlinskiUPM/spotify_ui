@@ -42,9 +42,6 @@ class PlayerState extends Equatable {
     Duration? position,
     int? songIndex,
   }) {
-    print((playlist ?? this.playlist)?.songs.map((s) => [s.id, s.name]).toList());
-    print((playlist ?? this.playlist)?.songIds);
-
     return PlayerState(
       status: status ?? this.status,
       repeat: repeat ?? this.repeat,
@@ -74,5 +71,5 @@ class PlayerState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [status, repeat, shuffle, song];
+  List<Object?> get props => [status, repeat, shuffle, song, playlist, queue, songIndex];
 }

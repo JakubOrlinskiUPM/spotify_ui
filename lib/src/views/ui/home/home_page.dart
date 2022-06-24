@@ -19,13 +19,13 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     BlocProvider.of<DataBloc>(context).add(DataFetchRecentlyPlayed());
+    BlocProvider.of<DataBloc>(context).add(DataFetchRecommended());
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<DataBloc, DataState>(builder: (context, state) {
-      print(state.recentlyPlayed);
       return Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(

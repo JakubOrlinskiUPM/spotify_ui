@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:uuid/uuid.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -10,64 +9,86 @@ import 'package:spotify_ui/src/business_logic/models/recently_played.dart';
 import 'package:spotify_ui/src/business_logic/models/song.dart';
 import 'package:spotify_ui/src/business_logic/blocs/extensions.dart';
 import 'package:spotify_ui/src/business_logic/models/extended_user.dart';
+import 'package:spotify_ui/src/business_logic/models/user_playlist.dart';
 import 'package:spotify_ui/src/business_logic/models/viewable.dart';
 
 class DataBloc extends Bloc<DataEvent, DataState> {
   DataBloc() : super(DataState.initialState()) {
     on<DataFetchRecentlyPlayed>(_onFetchRecentlyPlayed);
+    on<DataFetchRecommended>(_onFetchRecommended);
+    on<DataFetchLibrary>(_onFetchLibrary);
     on<DataSetUser>(_onSetUser);
   }
 
   _onSetUser(DataSetUser event, Emitter<DataState> emit) {
-    emit(state.copyWith(
-        user: ExtendedUser(id: event.user.uid, user: event.user)));
+    if (event.user != null) {
+      emit(state.copyWith(
+          user: Wrapped.value(
+              ExtendedUser(id: event.user!.uid, user: event.user))));
+    } else {
+      emit(state.copyWith(user: Wrapped.value(null)));
+    }
   }
 
   _onFetchRecentlyPlayed(
       DataFetchRecentlyPlayed event, Emitter<DataState> emit) async {
-    if (state.user == null) {
-      print("user not signed in!");
-      return;
-    }
-
-    QuerySnapshot snap = await state.userRef
+    DocumentSnapshot doc = await state.userRef
         .doc(state.user!.id)
         .collection("recently_played")
-        .limit(6)
-        .orderBy("timestamp")
+        .doc("index")
         .getWithCache();
-    var recentlyPlayed = snap.docs.map((doc) {
-      var json = doc.data() as Map<String, dynamic>;
-      json['id'] = doc.id;
-      return RecentlyPlayed.fromJson(json);
+    var json = doc.data() as Map<String, dynamic>;
+    var arr = json['recently_played'];
+
+    List<RecentlyPlayed> recentlyPlayed = arr.map<RecentlyPlayed>((doc) {
+      return RecentlyPlayed.fromJson(doc);
     }).toList();
 
-    // DocumentSnapshot likedSongs = await state.userRef
-    //     .doc("oRdyRNXgFXezoncEHVSGi6Gyzfw2")
-    //     .collection("extra_info")
-    //     .doc("liked_songs")
-    //     .getWithCache();
-    //
-    // var json = likedSongs.data() as Map<String, dynamic>;
-    // json['id'] = 'liked_songs';
-    // playlists.insert(0, Playlist.fromJson(json));
-
-    print("_onFetchRecentlyPlayed, recentlyPlayed!");
-    print(recentlyPlayed);
     emit(state.copyWith(
       recentlyPlayed: recentlyPlayed,
     ));
   }
 
+  _onFetchRecommended(
+      DataFetchRecommended event, Emitter<DataState> emit) async {
+    QuerySnapshot snap = await state.playlistsRef.limit(10).getWithCache();
+    var recommended = snap.docs.map((doc) {
+      var json = doc.data() as Map<String, dynamic>;
+      json['id'] = doc.id;
+      return Playlist.fromJson(json);
+    }).toList();
+
+    emit(state.copyWith(
+      recommended: recommended,
+    ));
+  }
+
+  _onFetchLibrary(DataFetchLibrary event, Emitter<DataState> emit) async {
+    QuerySnapshot snap = await state.userRef
+        .doc(state.user?.id)
+        .collection("user_playlist")
+        .where("liked", isEqualTo: true)
+        .getWithCache();
+
+    var recommended = snap.docs.map((doc) {
+      var json = doc.data() as Map<String, dynamic>;
+      json['id'] = doc.id;
+      return UserPlaylist.fromJson(json);
+    }).toList();
+
+    emit(state.copyWith(
+      library: recommended,
+    ));
+  }
+
   addNewUser(String id, Map json) async {
-    var newId = Uuid().v4();
     await state.userRef.doc(id).set(json);
     await state.userRef
         .doc(id)
         .collection("extra_info")
         .doc("liked_songs")
         .set({"my": true});
-    await state.userRef.doc(id).collection("recently_played").doc(newId).set({
+    await state.userRef.doc(id).collection("recently_played").doc().set({
       "song_id": null,
       "author_id": null,
       "playlist_id": "ZfnXoGPtUNVy3fYhmpJV",
@@ -147,9 +168,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
         json['id'] = doc.id;
         return Song.fromJson(json);
       }).toList();
-      songs.sort((Song s1, Song s2) =>
-          playlist.songIds.indexOf(s1.id) - playlist.songIds.indexOf(s2.id));
-      playlist.songs = songs;
+      playlist.sortSongs();
       return songs;
     });
   }
@@ -162,14 +181,32 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     });
   }
 
-  Future<Song> addRecentlyPlayed(String songId, String playlistId) {
-    return state.userRef
+  addRecentlyPlayed(
+    String songId,
+    String? playlistId,
+    String? artistId,
+  ) {
+    RecentlyPlayed rp = RecentlyPlayed(
+      songId: songId,
+      playlistId: playlistId,
+      artistId: artistId,
+      timestamp: DateTime.now(),
+    );
+    var json = rp.toJson();
+    state.userRef
         .doc(state.user!.id)
-        .getWithCache()
-        .then((DocumentSnapshot doc) {
-      var json = doc.data() as Map<String, dynamic>;
-      json['id'] = doc.id;
-      return Song.fromJson(json);
+        .collection("recently_played")
+        .doc()
+        .set(json);
+
+    json.remove("timestamp");
+    json.remove("song_id");
+    state.userRef
+        .doc(state.user!.id)
+        .collection("recently_played")
+        .doc('index')
+        .update({
+      'recently_played': FieldValue.arrayUnion([json]),
     });
   }
 
@@ -203,8 +240,12 @@ abstract class DataEvent extends Equatable {
 
 class DataFetchRecentlyPlayed extends DataEvent {}
 
+class DataFetchRecommended extends DataEvent {}
+
+class DataFetchLibrary extends DataEvent {}
+
 class DataSetUser extends DataEvent {
-  User user;
+  User? user;
 
   DataSetUser({required this.user});
 }
@@ -213,7 +254,7 @@ class DataFetch extends DataEvent {}
 
 class DataState extends Equatable {
   final List<RecentlyPlayed> recentlyPlayed;
-  final List<Playlist> library;
+  final List<UserPlaylist> library;
   final List<Playlist> recommended;
 
   late FirebaseFirestore db;
@@ -239,15 +280,15 @@ class DataState extends Equatable {
 
   DataState copyWith({
     List<RecentlyPlayed>? recentlyPlayed,
-    List<Playlist>? library,
+    List<UserPlaylist>? library,
     List<Playlist>? recommended,
-    ExtendedUser? user,
+    Wrapped<ExtendedUser?>? user,
   }) {
     return DataState(
       recentlyPlayed: recentlyPlayed ?? this.recentlyPlayed,
       library: library ?? this.library,
       recommended: recommended ?? this.recommended,
-      user: user ?? this.user,
+      user: user != null ? user.value : this.user,
     );
   }
 
@@ -266,4 +307,10 @@ class DataState extends Equatable {
 
   @override
   List<Object?> get props => [recentlyPlayed, library, recommended, user];
+}
+
+class Wrapped<T> {
+  final T value;
+
+  const Wrapped.value(this.value);
 }

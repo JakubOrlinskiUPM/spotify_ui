@@ -6,6 +6,7 @@ import 'package:spotify_ui/src/views/ui/playback/bottom_list_tile.dart';
 
 import 'package:spotify_ui/src/views/ui/playback/playback_sheet.dart';
 import 'package:spotify_ui/src/business_logic/blocs/player_bloc.dart';
+import 'package:spotify_ui/src/views/ui/playback/position_slider.dart';
 
 class PlaybackBottomSheet extends StatelessWidget {
   const PlaybackBottomSheet({
@@ -18,6 +19,9 @@ class PlaybackBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<PlayerBloc, PlayerState>(
+      buildWhen: (previous, current) {
+        return previous != current;
+      },
       builder: (context, state) {
         if (state.playlist == null || state.song == null) {
           return Container(height: 0);
@@ -39,18 +43,7 @@ class PlaybackBottomSheet extends StatelessWidget {
                       alignment: AlignmentDirectional.bottomStart,
                       children: [
                         BottomListTile(state: state),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: FractionallySizedBox(
-                            widthFactor: context
-                                .watch<PlaybackSliderProvider>()
-                                .sliderValue,
-                            child: Container(
-                              height: 2.5,
-                              decoration: BoxDecoration(color: Colors.white),
-                            ),
-                          ),
-                        ),
+                        const PositionSlider(),
                       ],
                     ),
                   ),

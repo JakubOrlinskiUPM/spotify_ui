@@ -30,7 +30,8 @@ class _FadeHeaderState extends State<FadeHeader> {
   Widget build(BuildContext context) {
     return SliverLayoutBuilder(
       builder: (context, constraints) {
-        double frac = ((expandedHeight - constraints.scrollOffset) / expandedHeight);
+        double frac =
+            ((expandedHeight - constraints.scrollOffset) / expandedHeight);
         frac = frac.clamp(0, 1);
         double textOpacity = 1 - (frac - 0.25);
         textOpacity = textOpacity > 0.95 ? textOpacity : 0;
@@ -40,21 +41,20 @@ class _FadeHeaderState extends State<FadeHeader> {
           // backgroundColor: Colors.transparent,
           leading: Stack(
             children: [
-              if (widget.imageFullSize)
-                ...[
-                  Padding(
-                    padding: const EdgeInsets.all(6.0),
-                    child: Opacity(
-                      opacity: frac,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade900.withAlpha(200),
-                          borderRadius: BorderRadius.circular(200),
-                        ),
+              if (widget.imageFullSize) ...[
+                Padding(
+                  padding: const EdgeInsets.all(6.0),
+                  child: Opacity(
+                    opacity: frac,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade900.withAlpha(200),
+                        borderRadius: BorderRadius.circular(200),
                       ),
                     ),
                   ),
-                ],
+                ),
+              ],
               Align(
                 alignment: Alignment.center,
                 child: IconButton(
@@ -139,11 +139,8 @@ class _FadeHeaderState extends State<FadeHeader> {
           heightFactor: frac,
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 30.0),
-            child: Hero(
-              tag: widget.heroString,
-              child: CachedNetworkImage(
-                  imageUrl: widget.imageUrl, fit: BoxFit.fitHeight),
-            ),
+            child: CachedNetworkImage(
+                imageUrl: widget.imageUrl, fit: BoxFit.fitHeight),
           ),
         ),
       );

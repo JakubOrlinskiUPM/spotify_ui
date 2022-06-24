@@ -41,11 +41,8 @@ class _MenuDialogState extends State<MenuDialog> {
             children: [
               SizedBox(
                 height: 250,
-                child: Hero(
-                  tag: widget.song!.heroString,
-                  child: CachedNetworkImage(
-                    imageUrl: widget.song!.album.imageUrl,
-                  ),
+                child: CachedNetworkImage(
+                  imageUrl: widget.song!.album.imageUrl,
                 ),
               ),
               Text(

@@ -24,6 +24,7 @@ class _PlaybackCarouselState extends State<PlaybackCarousel> {
   late PageController pageController;
   late StreamSubscription subscription;
   bool _isBlocked = false;
+  bool _isUserScroll = false;
 
   @override
   void initState() {
@@ -57,37 +58,47 @@ class _PlaybackCarouselState extends State<PlaybackCarousel> {
 
   @override
   Widget build(BuildContext context) {
-    return NotificationListener<ScrollNotification>(
-      onNotification: (ScrollNotification notification) {
-        if (notification.depth == 0 && notification is ScrollEndNotification) {
-          _onPageChanged(context, pageController.page?.ceil() ?? 0);
-        }
-        return false;
+    return NotificationListener<UserScrollNotification>(
+      onNotification: (UserScrollNotification notification) {
+        _isUserScroll = true;
+        return true;
       },
-      child: PageView.builder(
-        itemCount: widget.state.playlist?.songs.length,
-        controller: pageController,
-        // onPageChanged: (int pageNo) => _onPageChanged(context, pageNo),
-        itemBuilder: (BuildContext context, int itemIndex) {
-          return widget.childCallback(itemIndex);
+      child: NotificationListener<ScrollEndNotification>(
+        onNotification: (ScrollEndNotification notification) {
+          if (_isUserScroll && notification.depth == 0 &&
+              notification is ScrollEndNotification) {
+            _onPageChanged(context, pageController.page?.ceil() ?? 0);
+
+            _isUserScroll = false;
+          }
+          return false;
         },
+        child: PageView.builder(
+          itemCount: widget.state.playlist?.songIds.length,
+          controller: pageController,
+          itemBuilder: (BuildContext context, int itemIndex) {
+            return widget.childCallback(itemIndex);
+          },
+        ),
       ),
     );
   }
 
   void _onPageChanged(BuildContext context, int pageNo) {
-    if (widget.state.playlist != null) {
-      Song s = widget.state.playlist!.songs[pageNo];
-      if (widget.state.song != s) {
-        lock();
-        BlocProvider.of<PlayerBloc>(context).add(PlayerSetSongEvent(song: s));
+    if (!_isBlocked) {
+      if (widget.state.playlist != null) {
+        Song s = widget.state.playlist!.songs[pageNo];
+        if (widget.state.song != s) {
+          lock();
+          BlocProvider.of<PlayerBloc>(context).add(PlayerSetSongEvent(song: s));
+        }
       }
     }
   }
 
-  void lock() {
+  void lock([int? duration]) {
     _isBlocked = true;
-    Future.delayed(const Duration(milliseconds: 200), () {
+    Future.delayed(Duration(milliseconds: duration ?? 300), () {
       _isBlocked = false;
     });
   }

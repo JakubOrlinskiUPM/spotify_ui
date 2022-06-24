@@ -36,7 +36,7 @@ class PlaybackSliderProvider with ChangeNotifier {
   }
 
   PlaybackSliderProvider(this.audioPlayer) {
-    audioPlayer.onAudioPositionChanged.listen(_onAudioPositionChange);
+    audioPlayer.onPositionChanged.listen(_onAudioPositionChange);
 
     audioPlayer.onDurationChanged.listen(_onDurationChange);
   }

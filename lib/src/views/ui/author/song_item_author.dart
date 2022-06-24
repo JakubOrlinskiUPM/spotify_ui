@@ -30,11 +30,8 @@ class SongItemAuthor extends StatelessWidget {
               leading: SizedBox(
                 width: 50,
                 height: 50,
-                child: Hero(
-                  tag: song.heroString,
-                  child: CachedNetworkImage(
-                    imageUrl: song.album.imageUrl,
-                  ),
+                child: CachedNetworkImage(
+                  imageUrl: song.album.imageUrl,
                 ),
               ),
               title: Text(
@@ -71,7 +68,8 @@ class SongItemAuthor extends StatelessWidget {
       fullscreenDialog: true,
     );
 
-    MenuDialogReturn? value = await Navigator.of(context, rootNavigator: true).push(route);
+    MenuDialogReturn? value =
+        await Navigator.of(context, rootNavigator: true).push(route);
     if (value != null) {
       Navigator.of(context).pushNamed(value.route, arguments: value.arguments);
     }

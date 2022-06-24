@@ -11,13 +11,13 @@ import 'package:spotify_ui/src/app.dart';
 import 'package:spotify_ui/src/business_logic/blocs/data_bloc.dart';
 import 'package:spotify_ui/src/business_logic/blocs/player_bloc.dart';
 import 'package:spotify_ui/src/business_logic/providers/playback_slider_provider.dart';
+import 'package:spotify_ui/src/sign_in_guard.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  Bloc.observer = SimpleBlocObserver();
   AudioPlayer audioPlayer = AudioPlayer();
   DataBloc dataBloc = DataBloc();
   runApp(
@@ -73,23 +73,9 @@ void main() async {
             ),
           ),
           themeMode: ThemeMode.dark,
-          home: App(),
+          home: const SignInGuard(child: App()),
         ),
       ),
     ),
   );
-}
-
-class SimpleBlocObserver extends BlocObserver {
-  @override
-  void onTransition(Bloc bloc, Transition transition) {
-    super.onTransition(bloc, transition);
-    // print(transition.hashCode);
-  }
-
-  @override
-  void onError(BlocBase bloc, Object error, StackTrace stackTrace) {
-    // print(error);
-    super.onError(bloc, error, stackTrace);
-  }
 }

@@ -6,6 +6,7 @@ import 'package:spotify_ui/src/business_logic/models/playlist.dart';
 import 'package:spotify_ui/src/views/ui/components/custom_future_builder.dart';
 import 'package:spotify_ui/src/views/ui/components/middle_dot.dart';
 import 'package:spotify_ui/src/views/ui/routing.dart';
+import 'package:spotify_ui/src/business_logic/models/playlist_type.dart';
 
 class AlbumItemAuthor extends StatelessWidget {
   const AlbumItemAuthor({Key? key, required this.id}) : super(key: key);

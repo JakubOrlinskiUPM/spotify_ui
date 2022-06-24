@@ -1,11 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:spotify_ui/src/business_logic/blocs/data_bloc.dart';
 import 'package:spotify_ui/src/business_logic/models/playlist.dart';
-import 'package:spotify_ui/src/views/ui/components/album_list_item_detailed.dart';
+import 'package:spotify_ui/src/business_logic/models/user_playlist.dart';
+import 'package:spotify_ui/src/views/ui/library/playlist_list_item_detailed.dart';
 import 'package:spotify_ui/src/views/ui/components/bottom_sheet_dismiss_bar.dart';
-import 'package:spotify_ui/src/views/ui/components/middle_dot.dart';
+import 'package:spotify_ui/src/business_logic/models/playlist_type.dart';
 import 'package:spotify_ui/src/views/ui/routing.dart';
 
 enum SortBy { recentlyPlayed, recentlyAdded, alphabetical, creator }
@@ -35,10 +38,14 @@ class LibraryPage extends StatefulWidget {
 }
 
 class _LibraryPageState extends State<LibraryPage> {
-  bool searchOpen = false;
-  String searchText = "";
   SortBy sortBy = SortBy.recentlyPlayed;
   final List<PlaylistType> _chosenFilters = [];
+
+  @override
+  void initState() {
+    BlocProvider.of<DataBloc>(context).add(DataFetchLibrary());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,21 +71,14 @@ class _LibraryPageState extends State<LibraryPage> {
                   ),
                 ],
               ),
-              searchOpen
-                  ? SizedBox(
-                      width: 100,
-                      child: TextField(
-                        onChanged: (text) {
-                          setState(() {
-                            searchText = text;
-                          });
-                        },
-                      ),
-                    )
-                  : IconButton(
-                      icon: const Icon(Icons.search_outlined),
-                      onPressed: _toggleSearch,
-                    ),
+              IconButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed(SETTINGS_ROUTE);
+                },
+                icon: Icon(
+                  Icons.settings,
+                ),
+              )
             ],
           ),
           _buildChips(context),
@@ -94,11 +94,11 @@ class _LibraryPageState extends State<LibraryPage> {
           Expanded(
             child: BlocBuilder<DataBloc, DataState>(
               builder: (context, state) {
-                List<Playlist> filtered = _getFilteredLibrary(state.library);
+                List<UserPlaylist> filtered = _getFilteredLibrary(state.library);
                 return ListView.builder(
                   itemCount: filtered.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return AlbumListItemDetailed(item: filtered[index]);
+                    return PlaylistListItemDetailed(item: filtered[index]);
                   },
                 );
               },
@@ -109,31 +109,18 @@ class _LibraryPageState extends State<LibraryPage> {
     );
   }
 
-  List<Playlist> _getFilteredLibrary(List<Playlist> library) {
-    List<Playlist> filtered = library;
+  List<UserPlaylist> _getFilteredLibrary(List<UserPlaylist> library) {
+    List<UserPlaylist> filtered = library;
 
     if (_chosenFilters.isNotEmpty) {
       filtered = filtered
-          .where((pl) => _chosenFilters.contains(pl.playlistType))
-          .toList();
-    }
-    if (searchText.isNotEmpty) {
-      filtered = filtered
-          .where((pl) =>
-              pl.name.toLowerCase().contains(searchText.toLowerCase()) ||
-              pl.authorString.toLowerCase().contains(searchText.toLowerCase()))
+          .where((pl) => _chosenFilters.contains(pl.type))
           .toList();
     }
 
     filtered.sort((p1, p2) => p1.name.compareTo(p2.name));
 
     return filtered;
-  }
-
-  void _toggleSearch() {
-    setState(() {
-      searchOpen = !searchOpen;
-    });
   }
 
   Widget _buildChips(BuildContext context) {

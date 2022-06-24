@@ -10,22 +10,7 @@ class SearchPage extends StatelessWidget {
         child: Column(
       children: [
         Text("Search"),
-        OutlinedButton(
-          onPressed: syncDummySongs,
-          child: Text("Sync songs"),
-        ),
-        OutlinedButton(
-          onPressed: syncDummyPlaylists,
-          child: Text("Sync playlists"),
-        ),
-        OutlinedButton(
-          onPressed: syncDummyAlbums,
-          child: Text("Sync albums"),
-        ),
-        OutlinedButton(
-          onPressed: syncDummyAuthors,
-          child: Text("Sync authors"),
-        ),
+
       ],
     ));
   }
