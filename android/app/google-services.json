@@ -50,6 +50,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "926356738445-mbcdmre4pouh6lek3mdchnov2ceufeld.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.spotify_ui",
+            "certificate_hash": "5aa2ff53fbf9b87861320f782a2c20d731438709"
+          }
+        },
+        {
           "client_id": "926356738445-fn9o2c0air9ab9pajgt0nehmanaf1h4o.apps.googleusercontent.com",
           "client_type": 3
         }
