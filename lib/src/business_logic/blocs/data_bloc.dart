@@ -1,3 +1,4 @@
+import 'package:algolia/algolia.dart';
 import 'package:equatable/equatable.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -5,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spotify_ui/src/business_logic/models/author.dart';
 import 'package:spotify_ui/src/business_logic/models/playlist.dart';
+import 'package:spotify_ui/src/business_logic/models/playlist_type.dart';
 import 'package:spotify_ui/src/business_logic/models/recently_played.dart';
 import 'package:spotify_ui/src/business_logic/models/song.dart';
 import 'package:spotify_ui/src/business_logic/blocs/extensions.dart';
@@ -23,8 +25,13 @@ class DataBloc extends Bloc<DataEvent, DataState> {
   _onSetUser(DataSetUser event, Emitter<DataState> emit) {
     if (event.user != null) {
       emit(state.copyWith(
-          user: Wrapped.value(
-              ExtendedUser(id: event.user!.uid, user: event.user))));
+        user: Wrapped.value(
+          ExtendedUser(
+            id: event.user!.uid,
+            user: event.user,
+          ),
+        ),
+      ));
     } else {
       emit(state.copyWith(user: Wrapped.value(null)));
     }
@@ -173,7 +180,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     });
   }
 
-  Future<Song> getSong(String id) {
+  Future<Song> getSongById(String id) {
     return state.songsRef.doc(id).getWithCache().then((DocumentSnapshot doc) {
       var json = doc.data() as Map<String, dynamic>;
       json['id'] = doc.id;
@@ -183,14 +190,15 @@ class DataBloc extends Bloc<DataEvent, DataState> {
 
   addRecentlyPlayed(
     String songId,
-    String? playlistId,
+    Playlist? playlist,
     String? artistId,
   ) {
+    DateTime ts = DateTime.now();
     RecentlyPlayed rp = RecentlyPlayed(
       songId: songId,
-      playlistId: playlistId,
+      playlistId: playlist?.id,
       artistId: artistId,
-      timestamp: DateTime.now(),
+      timestamp: ts,
     );
     var json = rp.toJson();
     state.userRef
@@ -208,6 +216,38 @@ class DataBloc extends Bloc<DataEvent, DataState> {
         .update({
       'recently_played': FieldValue.arrayUnion([json]),
     });
+
+    if (playlist != null) {
+      state.userRef
+          .doc(state.user!.id)
+          .collection("user_playlist")
+          .doc(playlist.id)
+          .get()
+          .then((doc) {
+        if (doc.exists) {
+          state.userRef
+              .doc(state.user!.id)
+              .collection("user_playlist")
+              .doc(playlist.id)
+              .update({
+            'last_played_at': ts,
+          });
+        } else {
+          state.userRef
+              .doc(state.user!.id)
+              .collection("user_playlist")
+              .doc(playlist.id)
+              .set(UserPlaylist(
+                id: playlist.id,
+                lastPlayedAt: ts,
+                liked: false,
+                likedAt: null,
+                type: playlist.playlistType,
+                name: playlist.name,
+              ).toJson());
+        }
+      });
+    }
   }
 
   Future<Viewable> getRecentlyPlayedItem(RecentlyPlayed recentlyPlayed) {
@@ -230,6 +270,25 @@ class DataBloc extends Bloc<DataEvent, DataState> {
         return Author.fromJson(json);
       });
     }
+  }
+
+  Future<Map<String, List<String>>> search(String q) async {
+    Map<String, AlgoliaIndexReference> indices = {
+      "playlists": state.algolia.index('playlist_index'),
+      "songs": state.algolia.index('songs_index'),
+      "authors": state.algolia.index('authors_index')
+    };
+    Map<String, List<String>> results = {};
+
+    for (String key in indices.keys) {
+      results[key] = [];
+      AlgoliaQuerySnapshot snap = await indices[key]!.query(q).getObjects();
+
+      for (AlgoliaObjectSnapshot hit in snap.hits) {
+        results[key]!.add(hit.data['objectID']);
+      }
+    }
+    return results;
   }
 }
 
@@ -263,6 +322,8 @@ class DataState extends Equatable {
   late CollectionReference authorsRef;
   late CollectionReference userRef;
 
+  late Algolia algolia;
+
   ExtendedUser? user;
 
   DataState({
@@ -276,6 +337,11 @@ class DataState extends Equatable {
     playlistsRef = db.collection("playlists");
     authorsRef = db.collection("authors");
     userRef = db.collection("users");
+
+    algolia = const Algolia.init(
+      applicationId: 'JJ38JT9E0R',
+      apiKey: 'd76a9a4e457dd35001c2d46ac49d68f2',
+    );
   }
 
   DataState copyWith({

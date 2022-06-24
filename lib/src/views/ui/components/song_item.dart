@@ -20,7 +20,7 @@ class SongItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomFutureBuilder<Song>(
-      future: BlocProvider.of<DataBloc>(context).getSong(songId),
+      future: BlocProvider.of<DataBloc>(context).getSongById(songId),
       loading: SongItemLoading(),
       child: (Song song) {
         playlist.sortSongs(song);
@@ -62,7 +62,7 @@ class SongItem extends StatelessWidget {
     PlayerBloc bloc = context.read<PlayerBloc>();
     bloc.add(PlayerSetSongEvent(song: song, playlist: playlist));
     bloc.add(PlayerStartedEvent());
-    context.read<DataBloc>().addRecentlyPlayed(song.id, playlist.id, null);
+    context.read<DataBloc>().addRecentlyPlayed(song.id, playlist, null);
   }
 
   _onMenuPressed(BuildContext context, Song song) async {

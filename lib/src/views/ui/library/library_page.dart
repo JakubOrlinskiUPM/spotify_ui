@@ -6,7 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:spotify_ui/src/business_logic/blocs/data_bloc.dart';
 import 'package:spotify_ui/src/business_logic/models/playlist.dart';
 import 'package:spotify_ui/src/business_logic/models/user_playlist.dart';
-import 'package:spotify_ui/src/views/ui/library/playlist_list_item_detailed.dart';
+import 'package:spotify_ui/src/views/ui/library/library_playlist_item.dart';
 import 'package:spotify_ui/src/views/ui/components/bottom_sheet_dismiss_bar.dart';
 import 'package:spotify_ui/src/business_logic/models/playlist_type.dart';
 import 'package:spotify_ui/src/views/ui/routing.dart';
@@ -98,7 +98,7 @@ class _LibraryPageState extends State<LibraryPage> {
                 return ListView.builder(
                   itemCount: filtered.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return PlaylistListItemDetailed(item: filtered[index]);
+                    return LibraryPlaylistItem(item: filtered[index]);
                   },
                 );
               },
@@ -132,7 +132,6 @@ class _LibraryPageState extends State<LibraryPage> {
           return Padding(
             padding: const EdgeInsets.all(4.0),
             child: FilterChip(
-              selectedColor: Colors.green,
               label: Text(type.string),
               selected: _chosenFilters.contains(type),
               onSelected: (bool value) {

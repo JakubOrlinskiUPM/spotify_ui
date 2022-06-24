@@ -52,7 +52,7 @@ void main() async {
             scaffoldBackgroundColor: Colors.black,
             canvasColor: Colors.black,
             colorScheme: const ColorScheme.dark(
-              primary: Color(0xffbb86fc),
+              primary: Color(0xfff3f3f3),
               primaryVariant: Color(0xff3700B3),
               secondary: Color(0xfff5f5f5),
               secondaryVariant: Color(0xff929292),
@@ -70,6 +70,9 @@ void main() async {
                     MaterialStateProperty.all<Color>(Colors.transparent),
                 foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
               ),
+            ),
+            chipTheme: ChipThemeData(
+              selectedColor: Colors.green,
             ),
           ),
           themeMode: ThemeMode.dark,

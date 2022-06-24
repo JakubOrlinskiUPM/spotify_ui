@@ -11,7 +11,7 @@ RecentlyPlayed _$RecentlyPlayedFromJson(Map<String, dynamic> json) =>
       songId: json['song_id'] as String?,
       playlistId: json['playlist_id'] as String?,
       artistId: json['artist_id'] as String?,
-      timestamp: RecentlyPlayed.timestampFromJson(json['timestamp'] as int?),
+      timestamp: Converters.timestampFromJson(json['timestamp'] as int?),
     );
 
 Map<String, dynamic> _$RecentlyPlayedToJson(RecentlyPlayed instance) =>
@@ -19,5 +19,5 @@ Map<String, dynamic> _$RecentlyPlayedToJson(RecentlyPlayed instance) =>
       'song_id': instance.songId,
       'playlist_id': instance.playlistId,
       'artist_id': instance.artistId,
-      'timestamp': RecentlyPlayed.timestampToJson(instance.timestamp),
+      'timestamp': Converters.timestampToJson(instance.timestamp),
     };

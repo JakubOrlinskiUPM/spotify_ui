@@ -9,8 +9,8 @@ import 'package:spotify_ui/src/views/ui/components/middle_dot.dart';
 import 'package:spotify_ui/src/views/ui/routing.dart';
 import 'package:spotify_ui/src/business_logic/models/playlist_type.dart';
 
-class PlaylistListItemDetailed extends StatelessWidget {
-  const PlaylistListItemDetailed({Key? key, required this.item}) : super(key: key);
+class LibraryPlaylistItem extends StatelessWidget {
+  const LibraryPlaylistItem({Key? key, required this.item}) : super(key: key);
 
   static double height = 60;
 

@@ -7,6 +7,7 @@ const String PLAYLIST_VIEW_ROUTE = "playlistView";
 const String AUTHOR_VIEW_ROUTE = "authorView";
 const String SETTINGS_ROUTE = "settingsView";
 
+
 MaterialPageRoute? checkGeneralRoutes(route) {
   if (route.name.toString().startsWith(PLAYLIST_VIEW_ROUTE)) {
     String? id = route.name.split("/")[1];
